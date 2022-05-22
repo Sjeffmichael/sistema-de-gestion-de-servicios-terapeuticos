@@ -144,7 +144,7 @@ export default function SucurDetail(){
                             label={index === 0 ? 'Cubículo' : ''} required={false} key={field.key}>
                                 
                                 <Form.Item {...field} validateTrigger={['onChange', 'onBlur']}
-                                rules={[{required: true,whitespace: true,message: "¡Introduzca el nombre del cuarto!"}]} noStyle>
+                                rules={[{required: true,whitespace: true,message: "¡Introduzca el nombre del cubículo!"}]} noStyle>
                                     <Input placeholder="Nombre del Cubículo" style={{ width: '60%' }} />
                                 </Form.Item>
                                 {fields.length > 1 ? (<MinusCircleOutlined onClick={() => remove(field.name)}/>) : null}

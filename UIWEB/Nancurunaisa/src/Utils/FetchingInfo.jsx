@@ -23,6 +23,13 @@ export async function GetByPagTera(Page,perPage){
   return result;
 }
 
+export async function GetByPagCitas(Page,perPage){
+  /*const res = await fetch("https://www.mecallapi.com/api/attractions?page=" + Page + "&per_page=" + perPage);*/
+  /*const result = await res.json();*/
+  const result = [{Fecha:"2022-05-30",Hora:"19:00"}]
+  return result;
+}
+
 /*Get all information from specific id */
 export async function GetByIdTeraTa(id){
     const res = await fetch("https://www.mecallapi.com/api/users/"+id);
@@ -228,4 +235,12 @@ export async function DeleteTera(data){
    })
    const result = await res.json();
    return result;
+}
+
+export async function FecthUSDNIORate(){
+  const res = await fetch("https://v6.exchangerate-api.com/v6/2b03c3bbce449407cb6d52c1/pair/USD/NIO");
+  const result = await res.json();
+  localStorage.setItem('convertRate', result.conversion_rate);
+  localStorage.setItem('latestRateUpdated', getDateToday());
+  return result.conversion_rate;
 }

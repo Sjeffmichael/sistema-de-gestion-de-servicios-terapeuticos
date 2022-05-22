@@ -141,3 +141,20 @@
 .BottomRoundButton:hover {border: 2px solid var(--focusColor)}
    
 .BottomRoundButton:active {box-shadow: 4px 4px 12px #c5c5c5,-4px -4px 12px #ffffff;}
+
+.BackMenu{
+    background-size:cover;
+    background-image: url("https://source.unsplash.com/random/800x600");
+    background-position: center;
+    display: flex;
+    align-items:flex-start;
+    align-items: center;
+    padding-left: 10px;
+    position: fixed;
+    top:0;
+    right: 0;
+    left: 0;
+    height: 250px;
+    transition: 0.3s;
+    z-index: -1;
+}

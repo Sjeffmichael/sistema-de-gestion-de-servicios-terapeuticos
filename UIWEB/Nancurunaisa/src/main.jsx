@@ -50,6 +50,8 @@ function Nancurunaisa(){
         <Route path='Personal' element={[<RequireAuth key={0}/>,<BottomBar key={1}/>]}>
           <Route path='Home' element={<Home key="Home"/>}/>
 
+          <Route path='Citas' element={<Citas key="Citas"/>}/>
+
           <Route path='Clinica' element={<Outlet key="OutClin"/>}>
             <Route index element={<Clinica key="Clinic"/>}/>
 

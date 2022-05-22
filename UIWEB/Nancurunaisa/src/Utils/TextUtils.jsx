@@ -3,8 +3,8 @@ import { Button, Dropdown, Form, Image, Layout, PageHeader, Skeleton, Typography
 import { useNavigate } from "react-router-dom";
 const {Title} = Typography;
 
-export const sectionStyle={border:"2px solid purple",marginTop:"15px",boxShadow:"2px 2px 12px #c5c5c5",backgroundColor:"white",
-borderRadius:"10px",padding:"5px"}/*Purple Border of Form */
+export const sectionStyle={border:"2px solid rgb(89,32,133)",marginTop:"15px",boxShadow:"2px 2px 12px #c5c5c5",backgroundColor:"white",
+borderRadius:"20px",padding:"5px"}/*Purple Border of Form */
 
 export const DropdownMenu = (props) => (
     <Dropdown key="more" overlay={props.menu} placement="bottomRight" trigger={['click']}>

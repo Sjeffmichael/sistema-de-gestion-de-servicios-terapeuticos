@@ -45,7 +45,6 @@ export default function PacSDetail(){
                 setloading(false);
                 Navigate(-1);
             }
-            
         })
     }
 

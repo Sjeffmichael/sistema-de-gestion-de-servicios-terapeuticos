@@ -1,0 +1,55 @@
+@import "../../../node_modules/antd/dist/antd.css";
+:root{
+    --bgNav: rgba(80,40,106);
+    --colorNav: rgb(121, 60, 161);
+    --navActive: rgba(255,255,255);
+}
+
+.nav{
+    margin-top: 50px;
+    position: relative;
+    align-items: center;
+    height: 60px;
+    background-color: var(--bgNav);
+    border-radius: 20px;
+}
+
+.unselected{
+    color: var(--colorNav);
+    display: inline-grid;
+    text-align: center;
+    align-items: center;
+    font-size: medium;
+}
+
+.unselected:hover{
+    color: var(--navActive);
+}
+
+.unselected .tittle{
+    display: none;
+}
+
+.selected{
+    color: var(--navActive);
+    transform: translateY(-20%);
+    display: inline-grid;
+    text-align: center;
+    align-items: center;
+    font-size: x-large;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32,1.275);
+}
+.selected .tittle{
+    display: block;
+    font-size: medium;
+}
+
+.indicator{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: var(--bgNav);
+    top: -35px;
+    transition: all 0.4s ease-in;
+}

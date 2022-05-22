@@ -4,7 +4,7 @@
     width: 100%;/*Horizontal*/
     height: 500px;/*Vertical*/
     background-size:cover;
-    background-image: url("./sunrise.jpg");
+    background-image: url("../resources/sunrise.jpg");
     background-position: center;
 
     display:flex;

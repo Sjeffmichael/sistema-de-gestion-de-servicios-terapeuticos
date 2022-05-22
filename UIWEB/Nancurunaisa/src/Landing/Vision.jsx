@@ -13,12 +13,7 @@ function Vision(){
             className="Comentario"
                 author={<a>Eveling Díaz</a>}
                 avatar={<Avatar src={logo} alt="Eveling Diaz"/>}
-                content={
-                    [
-                    <p>Los masajes no son un lujo.</p>,
-                    <p>Los masajes son terapias que son importantes para nuestra salud.</p>  
-                    ]
-                }
+                content="Los masajes no son un lujo.Los masajes son terapias que son importantes para nuestra salud."
                 datetime="04/2022"
             />
         </div>

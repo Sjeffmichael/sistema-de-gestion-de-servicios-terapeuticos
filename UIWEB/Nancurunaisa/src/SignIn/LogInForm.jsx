@@ -1,3 +1,4 @@
+import { LoginOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import React,{useState} from "react";
 import { useNavigate} from "react-router-dom";
@@ -65,7 +66,7 @@ const LogInForm = () =>{
               <a href=''>¿Olvidó su contraseña?</a>
             </Form.Item>
             <Form.Item>
-              <Button type='primary' loading={isLoading} shape='round' htmlType='submit'>Iniciar Sesión</Button>
+              <Button type='primary' style={{width:"100%"}} icon={<LoginOutlined/>} loading={isLoading} shape='round' htmlType='submit'>Iniciar Sesión</Button>
             </Form.Item>
           </Form>
       </div>

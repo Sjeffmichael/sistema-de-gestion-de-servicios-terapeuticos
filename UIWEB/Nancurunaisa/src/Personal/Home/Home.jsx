@@ -5,11 +5,9 @@ import { Layout } from 'antd';
 function Home (){
 
     return (
-        [
         <Layout>
             <div>Anormal</div>
         </Layout>
-    ]
     )
   }
   

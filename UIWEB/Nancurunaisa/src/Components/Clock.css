@@ -1,8 +1,5 @@
 .clockPerfil{
     height: 100px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     border-radius: 25px;
     width: 100%;
     max-width: 600px;
@@ -12,12 +9,9 @@
     transition: ease-in-out;
 }
 .DayNight{
-    border-bottom-left-radius: 25px;
-    border-top-left-radius: 25px;
-    background-position: left;
+    background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 90%;
     width: 30%;
     height: 100%;
-    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }

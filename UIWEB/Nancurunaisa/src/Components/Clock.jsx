@@ -1,23 +1,22 @@
 import "./Clock.css";
-import {Layout,Typography} from 'antd';
+import {Col,Row} from 'antd';
 import { useState } from "react";
-import day from "../resources/clockDay.jpg";
-import night from "../resources/clockNightjpg.jpg";
+import day from "../resources/sunIcon.svg";
+import night from "../resources/moonIcon.svg";
 
-const Horario = Layout;
-const { Title } = Typography;
+function getHour(time){const aux = time.split(":"); return getampm(time)=="am"? Number(aux[0]):Number(aux[0])+12}
+function getMinute(time){const aux = time.split(":"); const aux2 = aux[1].split(" "); return Number(aux2[0]);}
+function getampm(time){const aux = time.split(" "); return aux[1];}
 
 function RangeDate(min,max,today){
-    var aa1=min.split(":");
-    var aa2=max.split(":");
-    var hourmin = parseInt(aa1[0]);
-    var hourmax = parseInt(aa2[0]);
-    var minmin = parseInt(aa1[1]);
-    var minmax = parseInt(aa2[1]);
+    var hourmin = getHour(min);
+    var hourmax = getHour(max);
+    var minmin = getMinute(min);
+    var minmax = getMinute(max);
 
     if (hourmin <= today.getHours() && hourmax >= today.getHours()){
         if (hourmin == today.getHours() || hourmax == today.getHours()){
-            if (minmin <= today.getMinutes() && minmax >= today.getMinutes()){
+            if (minmin <= today.getMinutes() && minmax <= today.getMinutes()){
                 return true;
             }else return false;
         } else return true;
@@ -32,7 +31,7 @@ export default function ClockShow(props){
     var color = "red";
     var today = new Date();
 
-    if (RangeDate("06:00:00","18:00:00",today)) {
+    if (RangeDate("06:00 am","06:00 pm",today)) {
         isday = true;   
     }
 
@@ -47,19 +46,16 @@ export default function ClockShow(props){
             sucur = "Sucursal: " + props.sucursal;
             color="blue";
         }
-    }else{
-        display ="Fuera del horario laboral";
-        color="red";
     }
 
     return(
-        <Horario className="clockPerfil">
-            <div className="DayNight" style={{backgroundImage:`url(${isday?day:night})`}} />
-            <div style={{textAlign:"center",width:"65%"}}>
+        <Row className="clockPerfil" style={{marginTop:"10px",display:props.visible? "":"none"}}>
+            <Col span={5} className="DayNight" style={{backgroundImage:`url(${isday?day:night})`}} />
+            <Col span={18} style={{paddingTop:"5%", textAlign:"center"}}>
                 <h1> {display} </h1>
                 <h5> {sucur} </h5>
-            </div>
-            <div style={{width:"5%",height:"100%",backgroundColor:color,borderBottomRightRadius:"25px",borderTopRightRadius:"25px"}}/>
-        </Horario>
+            </Col>
+            <Col span={1} style={{height:"100%",backgroundColor:color,borderBottomRightRadius:"25px",borderTopRightRadius:"25px"}}/>
+        </Row>
     )
 }

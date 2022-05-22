@@ -1,4 +1,4 @@
-import "./Logoutbutton.css";
+import "./ReddangerButton.css";
 import React, { useState } from 'react';
 import { Modal, Button } from 'antd';
 import { useNavigate} from "react-router-dom";
@@ -19,7 +19,7 @@ export default function Logoutbutton(){
             setConfirmLoading(false);
             localStorage.removeItem("accessToken");
             localStorage.removeItem("user");
-            Navigate("/Home");
+            Navigate("/");
         }, 1000);
       };
     
@@ -29,8 +29,8 @@ export default function Logoutbutton(){
       };
 
     return([
-        <button onClick={showModal} className="Logout">Cerrar Sesión</button>,
-        <Modal centered title="Cerrar Sesión" visible={visible} onOk={handleOk} onCancel={handleCancel}
+        <button key="logout" onClick={showModal} className="Logout">Cerrar Sesión</button>,
+        <Modal key="logoutModal" centered title="Cerrar Sesión" visible={visible} onOk={()=>handleOk} onCancel={()=>handleCancel}
             footer={[
                 <Button key="back" onClick={handleCancel}>
                   Cancelar

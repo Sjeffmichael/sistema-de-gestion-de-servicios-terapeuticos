@@ -5,8 +5,7 @@ export default function WatsButton(props){
     return(
         <button onClick={()=>{setTimeout(() => {  window.location=gochat; }, 300)}} className="WatsButton">
             WhatsApp
-            <div className="iconWats">
-            </div>
+            <div className="iconWats"/>
         </button>
     )
 }

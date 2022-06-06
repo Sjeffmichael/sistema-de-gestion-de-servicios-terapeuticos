@@ -12,6 +12,7 @@ namespace api_nancurunaisa.Controllers
     {
         public IConfiguration _configuration;
         private readonly nancurunaisadbContext _context;
+        public static AuthToken authToken = new AuthToken();
 
         public TokenController(IConfiguration config, nancurunaisadbContext context)
         {
@@ -46,8 +47,8 @@ namespace api_nancurunaisa.Controllers
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(10),
                         signingCredentials: signIn);
-
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    authToken.token = new JwtSecurityTokenHandler().WriteToken(token);
+                    return Ok(authToken);
                 }
                 else
                 {

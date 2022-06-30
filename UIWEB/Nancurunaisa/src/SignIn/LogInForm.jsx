@@ -2,17 +2,9 @@ import { LoginOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import React,{useState} from "react";
 import { useNavigate} from "react-router-dom";
+import { loginUser } from "../Utils/FetchingInfo";
+import { decodeJWT } from '../Utils/Calwulator';
 import "./LogInForm.css";
-
-async function loginUser(credentials) {
-    return fetch('https://www.mecallapi.com/api/login', {
-      method:"POST",
-      headers:{
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(credentials)
-    }).then(data => data.json())
-  };
 
 const LogInForm = () =>{
   const [form] = Form.useForm();
@@ -30,16 +22,21 @@ const LogInForm = () =>{
   const onFinish = async e =>{
     if(!isLoading){
       setloading(true);
-      const username = await getUserField();
+      const email = await getUserField();
       const password = await getPassField();
-      const response = await loginUser({username,password});
-        if("accessToken" in response){
-          message.success("Bienvenido",1).then((value) =>{
-            localStorage.setItem('accessToken', response['accessToken']);
-            localStorage.setItem('user', JSON.stringify(response['user']));
-            setloading(false);
-            Navigate("/Personal/Home");});
-        }else{message.error("Inicio de sesión Fallido",3);setloading(false);}
+      loginUser({email,password}).then((result)=>{
+        message.success("Bienvenido",1).then((value) =>{
+        localStorage.setItem('accessToken', result.token);
+
+        const user = decodeJWT(result.token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        setloading(false);
+        Navigate("/Personal/Home");});
+      }).catch((error)=>{
+        message.error("La contraseña o correo son incorrectos",3);
+        setloading(false);
+      })
     }
     
   }
@@ -61,9 +58,9 @@ const LogInForm = () =>{
             </Form.Item>
             <Form.Item>
               <Form.Item name="remember" valuePropName='checked' noStyle>
-                <Checkbox>Recordarme</Checkbox>
+                <Checkbox style={{color:"white"}}>Recordarme</Checkbox>
               </Form.Item>
-              <a href=''>¿Olvidó su contraseña?</a>
+              <a  href=''>¿Olvidó su contraseña?</a>
             </Form.Item>
             <Form.Item>
               <Button type='primary' style={{width:"100%"}} icon={<LoginOutlined/>} loading={isLoading} shape='round' htmlType='submit'>Iniciar Sesión</Button>

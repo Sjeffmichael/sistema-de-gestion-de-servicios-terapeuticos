@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
-import {GetByIdTeraTa, CreateTeraTa, DeleteTeraTa, UpdateTeraTa} from '../../../Utils/FetchingInfo';
+import {GetByIdTeraTa, CreateTeraTa, DeleteLogicTeraTa, UpdateTeraTa} from '../../../Utils/FetchingInfo';
 import { TerataFormActionProvider,getaction} from '../../../Utils/ActionsProviders';
-import {Typography, Skeleton,Layout,Select,Form,Image, Button, Dropdown} from 'antd';
+import {Typography, Skeleton,Layout,Select,Form,Image, Button, Dropdown, Avatar} from 'antd';
 import {Input,DatePicker,Divider, Upload,message,Menu} from 'antd';
 import "../../../Utils/TextUtils.css";
 
@@ -13,33 +13,11 @@ import Clock from '../../../Components/Clock';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-import { FormPageHeader, sectionStyle, BlockRead, FormAvName, ValDoubleName, ButtonSubmit } from '../../../Utils/TextUtils';
+import { FormPageHeader, sectionStyle, BlockRead, FormAvName, ValDoubleName, ButtonSubmit, getFirstWord } from '../../../Utils/TextUtils';
 import ImgCrop from 'antd-img-crop';
 
 const { Title } = Typography;
 const { Option } = Select;
-
-function getAge(dateString) {
-  var today = new Date();
-  var birthDate = new Date(dateString);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-}
-return age;
-}
-function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-}
 
 /*Formulario de lectura, Edicion, Adicion */
 export default function TerapeutaDetail(){
@@ -54,11 +32,13 @@ export default function TerapeutaDetail(){
   const [form] = Form.useForm();
 
   const [Terapeuta,setTerapeuta] = useState([]);/* All terapeuta info after fetching */
-  const [EntradaHora,setEntradaHora] = useState("09:00 am");
-  const [SalidaHora,setSalidaHora]= useState("06:00 pm");
+  const [EntradaHora,setEntradaHora] = useState("09:00");
+  const [SalidaHora,setSalidaHora]= useState("18:00");
+  const [fotoPerfil,setFotoPerfil] = useState({imageFile:null,imageSrc:null});
   const [ActSucur,setActSucur] = useState("Rafaela Herrera");
 
-  const changeHorario=(FH,LH)=>{setEntradaHora(FH);setSalidaHora(LH);console.log(LH,FH)}
+  const url = "http://172.23.173.158:5037/Images/";
+
   const OptionDayFree = [
     <Option key={1} value={1}>Lunes</Option>,
     <Option key={2} value={2}>Martes</Option>,
@@ -68,6 +48,29 @@ export default function TerapeutaDetail(){
     <Option key={6} value={6}>Sabado</Option>,
     <Option key={7} value={7}>Domingo</Option>
 ]
+
+const dataTeraTa = () =>{
+  return {
+    "idMasajista": idTA,
+    "idSucursal": 1,
+    "nombres": form.getFieldValue("Nombres"),
+    "apellidos": form.getFieldValue("Apellidos"),
+    "fechaNacimiento": "2022-06-02T05:43:13.627",
+    "correo": form.getFieldValue("Mail"),
+    "password": "123456",
+    "foto": null,
+    "roll": "1",
+    "numCel": form.getFieldValue("Phone"),
+    "activo": true,
+    "sexo": "M",
+    "horaEntrada": EntradaHora,
+    "horaSalida": SalidaHora,
+    "fotoPerfil": fotoPerfil.imageSrc,
+    "idSucursalNavigation": null,
+    "idCita": [],
+    "idDia": []
+  }
+}
 
   /* * * * * * * * * * * * * * * * * * *  */
   /*This Functions are Only in Action UPDATE */
@@ -80,36 +83,37 @@ export default function TerapeutaDetail(){
   const TeraTaGet = () =>{
     GetByIdTeraTa(idTA).then((result)=>{
       setLoading(false);
-      setTerapeuta(result.user);
-      //setEntradaHora();
-      //setSalidaHora();
-      //setActSucur();
+      setTerapeuta(result);
+      setEntradaHora(moment(result.horaEntrada).format("HH:mm"));
+      setSalidaHora(moment(result.horaSalida).format("HH:mm"));
+      setFotoPerfil(result.fotoPerfil);
+      setActSucur(result.idSucursal);
       form.resetFields();
         }
       )
   }
 
-  const deleteTerata =()=>{
-    var data = {'id':idTA}
-        DeleteTeraTa(data).then((result)=>{
-          if (result['status'] === 'ok'){
-            message.success("Terapeuta Eliminado",1).then(()=>{
-              setloading(false);
-              Navigate(-1);
-            })
-          }else{message.error("No se pudo Eliminar",2);setloading(false);}
+  const DeAcTerata =(DeAc)=>{
+    var data = dataTeraTa();
+    data.activo = DeAc;
+    UpdateTeraTa(idTA,data).then((result)=>{
+      console.log(result);
+      if (result.ok){
+        message.success("Terapeuta Modificado",1).then(()=>{
+          setloading(false);
+          Navigate(-1);
         })
+      }else{message.error("No se pudo Modificar",2);setloading(false);}
+    })
   }
 
   const userMenu = (
       <Menu style={{width:"200px",borderRadius:"20px"}}>
-        <Menu.Item key="1">Item 1</Menu.Item>
-        <Menu.Item key="2">Item 2</Menu.Item>
-        <Menu.Item key="3">{Terapeuta.Active == true? "Desactivar":"Activar"}</Menu.Item>
-        <Menu.Divider />
-        <Menu.Item key="4">
-          <Button type='primary' onClick={()=>{deleteTerata()}} danger 
-          style={{width:"100%",borderBottomLeftRadius:"20px",borderBottomRightRadius:"20px"}}>Eliminar</Button>
+        <Menu.Item key="1">
+          <Button type='primary' onClick={()=>{DeAcTerata(Terapeuta.activo)}} danger 
+          style={{width:"100%",borderBottomLeftRadius:"20px",borderBottomRightRadius:"20px"}}>
+            {Terapeuta.activo == true? "Desactivar":"Activar"}
+            </Button>
         </Menu.Item>
       </Menu>
     );
@@ -121,24 +125,21 @@ export default function TerapeutaDetail(){
     if(isLoading || isInModal) {return;}
     setloading(true);
     if (ActionsProvider.isAdd) {
-      var data = {
-      'fname': form.getFieldValue("Nombres"),
-      'lname': form.getFieldValue("Apellidos"),
-      'username': form.getFieldValue("Nombres")+form.getFieldValue("Apellidos"),
-      'email': form.getFieldValue("Mail"),
-      'avatar': "https://source.unsplash.com/random/800x600"}
+      var data = dataTeraTa();
       CreateTeraTa(data).then((result)=>{
-      if (result['status'] === 'ok') {
+        console.log(result);
+      /*if (result['status'] === 'ok') {
         message.success("Terapeuta Añadido",1).then(()=>{
           setloading(false);
           Navigate(-1);
         })
-      }else{message.error("No se pudo añadir",2);setloading(false);}
+      }else{message.error("No se pudo añadir",2);setloading(false);}*/
     })
     }else{
-      var data = {'id':idTA,"lname": form.getFieldValue("Apellidos")}
-      UpdateTeraTa(data).then((result)=>{
-        if (result['status'] === 'ok'){
+      var data = dataTeraTa();
+      UpdateTeraTa(idTA,data).then((result)=>{
+        console.log(result);
+        if (result.ok){
           message.success("Terapeuta Modificado",1).then(()=>{
             setloading(false);
             Navigate(-1);
@@ -148,55 +149,32 @@ export default function TerapeutaDetail(){
     }
   }
 
-  /*UploadImage */
-  const [fileList, setFileList] = useState([{
-    uid: '-1',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-  }]);
-
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async file => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise(resolve => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
+  const showPreview = (e) => {
+    if(e.target.files && e.target.files[0]){
+      let imageFile = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {setFotoPerfil({imageFile,imageSrc:e.target.result});}
+      reader.readAsDataURL(imageFile);
     }
-    const image = new Image();
-    image.src = src;
-    /*const imgWindow = window.open(src);
-    imgWindow.document.write(image.outerHTML);*/
-  };
-
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess("ok");
-    }, 0);
-  };
+  }
 
     return(<div>
       <BlockRead Show={ActionsProvider.isRead}/>
       <FormPageHeader ActionProv={ActionsProvider} Text="Terapeuta" menu={userMenu}/>
       <div className='BackImageCollapsible' style={{display:ActionsProvider.isAdd? "none":""}}/>
 
-      <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={Terapeuta.avatar} Text={Terapeuta.fname+" "+Terapeuta.lname}/>
+      <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={Terapeuta.fotoPerfil} Text={Terapeuta.nombres+" "+Terapeuta.apellidos}/>
       
       <Layout className='ContentLayout' style={{display:Loading ? "None":""}}>
         <div style={{zIndex:"6",display:ActionsProvider.isAdd? "none":"flex"}}>
           <WatsButton number="+50581248928"/>
         </div>
-        <Clock visible={!ActionsProvider.isAdd} entrada={EntradaHora} salida={SalidaHora} sucursal={ActSucur}/>          
+        <Clock visible={!ActionsProvider.isAdd} entrada={EntradaHora} salida={SalidaHora} sucursal={ActSucur}/>        
         
         <Form onFinish={()=>{onFinish()}} onFinishFailed={(e)=>{form.scrollToField(e.errorFields[0].name)}} 
-        initialValues={{Nombres:Terapeuta.fname, Apellidos:Terapeuta.lname,Phone:"50557533230", 
-        HE:'09:00',HS:'18:00',Mail:Terapeuta.email, Gender:"M",Birth:moment("1990/01/01", "YYYY/MM/DD"),FreeDay:[6,7]}} 
+        initialValues={{Nombres:Terapeuta.nombres, Apellidos:Terapeuta.apellidos,Phone:Terapeuta.numCel, 
+        roll:Terapeuta.roll,HE:EntradaHora,HS:SalidaHora,Mail:Terapeuta.correo, Gender:Terapeuta.sexo,
+        Birth:Terapeuta.fechaNacimiento? moment(Terapeuta.fechaNacimiento, "YYYY/MM/DD"): moment("1990/01/01","YYYY/MM/DD"), FreeDay:[6,7]}} 
         form={form} size='Default' style={{marginTop:"25px",maxWidth:"600px",width:"100%"}}>
 
           <div style={sectionStyle}>
@@ -240,6 +218,14 @@ export default function TerapeutaDetail(){
           
         <div style={sectionStyle}>
           <Title level={4}>Información Laboral</Title>
+          <Form.Item name="roll" label="Rol:" rules={[{required:true,message:"¡Seleccione el Rol!"}]}>
+            <Select>
+              <Option value="1">Popietario</Option>
+              <Option value="2">Manager</Option>
+              <Option value="3">Terapeuta</Option>
+              <Option value="4">Invitado</Option>
+            </Select>
+          </Form.Item>
           <Form.Item name="HE" label="Horario Entrada">
             <Input type="time" style={{width:"40%"}}/>
           </Form.Item>
@@ -263,16 +249,8 @@ export default function TerapeutaDetail(){
 
           <div style={sectionStyle}>
             <Title level={4}>Perfil</Title>
-            <Form.Item>
-              <ImgCrop>
-                <Upload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" accept='.png'
-                  beforeUpload={beforeUpload} listType="picture-card"
-                  fileList={fileList} onChange={onChange} onPreview={onPreview}
-                  customRequest={dummyRequest}>
-                  {fileList.length < 2 && '+ Upload'}
-                </Upload>
-              </ImgCrop>
-            </Form.Item>
+            <Avatar src={fotoPerfil? url+fotoPerfil.imageSrc:null} style={{width:"100px",height:"100px"}}/>
+            <input type="file" accept='image/*' onChange={(e)=>{showPreview(e)}}/>
           </div>
 
           <ButtonSubmit ActionProv={ActionsProvider} isLoading={isLoading}/>
@@ -282,5 +260,4 @@ export default function TerapeutaDetail(){
       </div>)
 }
 
-/*grid-row: 2 / span 2;
-grid-column: 2 / span 2; */
+//<ImgCrop>

@@ -1,10 +1,9 @@
 import {LoadingOutlined, SearchOutlined} from "@ant-design/icons"
 
 export default function Searchbar(props){
-    var search = "";
+    let {search} = props;
 
     const onSearch=(e)=>{
-        if (search == "") return;
         if (typeof props.onSearch === "function"){
             props.onSearch(search);
         }

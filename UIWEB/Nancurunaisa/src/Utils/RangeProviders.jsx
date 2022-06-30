@@ -1,11 +1,9 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export function getMyRange() {
-    const user = localStorage.getItem('user');
-    if (!user) {
-        return Ranges.Invited/*user.Rango */
-    }
-    else { return Ranges.Owner}/*This is me, if i am loged */
+    /*const user = JSON.parse(localStorage.getItem('user'));
+    return user.Roll;*/
+    return Ranges.Owner;
 }
 
 function includes(array){
@@ -16,6 +14,20 @@ function includes(array){
     return false;
 }
 
+export function AllowFunction(Permited){
+    if (includes(Permited)){ 
+        return true 
+    }
+    return false
+}
+
+export function DenyFunction(Exclude){
+    if (includes(Exclude)){ 
+        return false 
+    }
+    return true
+}
+
 export function Allow(Permited){
     if (includes(Permited.Permited)){ 
         return (<Outlet/>) 
@@ -24,7 +36,7 @@ export function Allow(Permited){
 }
 
 export function Deny(Exclude){
-    if (!includes(Exclude.Exclude)){ 
+    if (includes(Exclude.Exclude)){ 
         return (<Navigate to="/Personal/Clinica" state={{from:useLocation()}} replace/>) 
     }
     return (<Outlet/>)

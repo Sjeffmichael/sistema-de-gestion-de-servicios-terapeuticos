@@ -9,13 +9,17 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@nivo/bar": "^0.79.1",
+    "@nivo/core": "^0.79.0",
     "antd": "^4.19.5",
     "antd-img-crop": "^4.2.3",
     "gooey-react": "^1.1.0",
     "react": "^17.0.2",
+    "react-calendar": "^3.7.0",
     "react-dom": "^17.0.2",
     "react-phone-input-2": "^2.15.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "react-spring-bottom-sheet": "^3.4.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.0.7",

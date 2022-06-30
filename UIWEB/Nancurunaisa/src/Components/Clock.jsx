@@ -3,20 +3,15 @@ import {Col,Row} from 'antd';
 import { useState } from "react";
 import day from "../resources/sunIcon.svg";
 import night from "../resources/moonIcon.svg";
-
-function getHour(time){const aux = time.split(":"); return getampm(time)=="am"? Number(aux[0]):Number(aux[0])+12}
-function getMinute(time){const aux = time.split(":"); const aux2 = aux[1].split(" "); return Number(aux2[0]);}
-function getampm(time){const aux = time.split(" "); return aux[1];}
+import moment from 'moment';
 
 function RangeDate(min,max,today){
-    var hourmin = getHour(min);
-    var hourmax = getHour(max);
-    var minmin = getMinute(min);
-    var minmax = getMinute(max);
+    var hourmin = min.split(":");
+    var hourmax = max.split(":");
 
-    if (hourmin <= today.getHours() && hourmax >= today.getHours()){
-        if (hourmin == today.getHours() || hourmax == today.getHours()){
-            if (minmin <= today.getMinutes() && minmax <= today.getMinutes()){
+    if (Number(hourmin[0]) <= today.getHours() && Number(hourmax[0]) >= today.getHours()){
+        if (Number(hourmin[0]) == today.getHours() || Number(hourmax[0]) == today.getHours()){
+            if (Number(hourmin[1]) <= today.getMinutes() && Number(hourmax[1]) <= today.getMinutes()){
                 return true;
             }else return false;
         } else return true;
@@ -31,7 +26,7 @@ export default function ClockShow(props){
     var color = "red";
     var today = new Date();
 
-    if (RangeDate("06:00 am","06:00 pm",today)) {
+    if (RangeDate("06:00","18:00",today)) {
         isday = true;   
     }
 

@@ -11,69 +11,70 @@ namespace api_nancurunaisa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FacturaController : ControllerBase
+    public class PromocionController : ControllerBase
     {
         private readonly nancurunaisadbContext _context;
 
-        public FacturaController(nancurunaisadbContext context)
+        public PromocionController(nancurunaisadbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Factura
+        // GET: api/Promocion
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<factura>>> Getfactura(int Page, int PerPage)
+        public async Task<ActionResult<IEnumerable<promocion>>> Getpromocion(int Page, int PerPage, string? nombrePromocion="")
         {
-          if (_context.factura == null)
+          if (_context.promocion == null)
           {
               return NotFound();
           }
             var pageResult = (float)PerPage;
-            var pageCount = Math.Ceiling(_context.factura.Count() / (float)PerPage);
+            var pageCount = Math.Ceiling(_context.promocion.Where(t => t.nombrePromocion.Contains(nombrePromocion)).Count() / (float)PerPage);
 
-            var facturasResults = await _context.factura
+            var promocionesResults = await _context.promocion.Where(t => t.nombrePromocion.Contains(nombrePromocion))
                   .Skip((Page - 1) * PerPage)
                   .Take((int)pageResult)
                   .ToListAsync();
 
-            var response = new FacturaPaginationResponse
+            var response = new PromocionPaginationResponse
             {
-                facturas = facturasResults,
+                promociones = promocionesResults,
                 currentPage = Page,
                 pages = (int)pageCount
             };
+
             return Ok(response);
         }
 
-        // GET: api/Factura/5
+        // GET: api/Promocion/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<factura>> Getfactura(int id)
+        public async Task<ActionResult<promocion>> Getpromocion(int id)
         {
-          if (_context.factura == null)
+          if (_context.promocion == null)
           {
               return NotFound();
           }
-            var factura = await _context.factura.FindAsync(id);
+            var promocion = await _context.promocion.FindAsync(id);
 
-            if (factura == null)
+            if (promocion == null)
             {
                 return NotFound();
             }
 
-            return factura;
+            return promocion;
         }
 
-        // PUT: api/Factura/5
+        // PUT: api/Promocion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> Putfactura(int id, factura factura)
+        public async Task<IActionResult> Putpromocion(int id, promocion promocion)
         {
-            if (id != factura.idFactura)
+            if (id != promocion.idPromocion)
             {
                 return BadRequest();
             }
 
-            _context.Entry(factura).State = EntityState.Modified;
+            _context.Entry(promocion).State = EntityState.Modified;
 
             try
             {
@@ -81,7 +82,7 @@ namespace api_nancurunaisa.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!facturaExists(id))
+                if (!promocionExists(id))
                 {
                     return NotFound();
                 }
@@ -94,44 +95,44 @@ namespace api_nancurunaisa.Controllers
             return NoContent();
         }
 
-        // POST: api/Factura
+        // POST: api/Promocion
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<factura>> Postfactura(factura factura)
+        public async Task<ActionResult<promocion>> Postpromocion(promocion promocion)
         {
-          if (_context.factura == null)
+          if (_context.promocion == null)
           {
-              return Problem("Entity set 'nancurunaisadbContext.factura'  is null.");
+              return Problem("Entity set 'nancurunaisadbContext.promocion'  is null.");
           }
-            _context.factura.Add(factura);
+            _context.promocion.Add(promocion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getfactura", new { id = factura.idFactura }, factura);
+            return CreatedAtAction("Getpromocion", new { id = promocion.idPromocion }, promocion);
         }
 
-        // DELETE: api/Factura/5
+        // DELETE: api/Promocion/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletefactura(int id)
+        public async Task<IActionResult> Deletepromocion(int id)
         {
-            if (_context.factura == null)
+            if (_context.promocion == null)
             {
                 return NotFound();
             }
-            var factura = await _context.factura.FindAsync(id);
-            if (factura == null)
+            var promocion = await _context.promocion.FindAsync(id);
+            if (promocion == null)
             {
                 return NotFound();
             }
 
-            _context.factura.Remove(factura);
+            _context.promocion.Remove(promocion);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool facturaExists(int id)
+        private bool promocionExists(int id)
         {
-            return (_context.factura?.Any(e => e.idFactura == id)).GetValueOrDefault();
+            return (_context.promocion?.Any(e => e.idPromocion == id)).GetValueOrDefault();
         }
     }
 }

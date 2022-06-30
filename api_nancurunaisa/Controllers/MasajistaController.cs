@@ -25,16 +25,16 @@ namespace api_nancurunaisa.Controllers
 
         // GET: api/Masajista
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<masajista>>> Getmasajista(int Page, int PerPage)
+        public async Task<ActionResult<IEnumerable<masajista>>> Getmasajista(int Page, int PerPage, string? nombreMasajista = "")
         {
           if (_context.masajista == null)
           {
               return NotFound();
           }
             var pageResult = (float)PerPage;
-            var pageCount = Math.Ceiling(_context.masajista.Count() / (float)PerPage);
+            var pageCount = Math.Ceiling(_context.masajista.Where(t => t.nombres.Contains(nombreMasajista)).Count() / (float)PerPage);
 
-            var masajistasResults = await _context.masajista
+            var masajistasResults = await _context.masajista.Where(t => t.nombres.Contains(nombreMasajista)).Include(x => x.idDia)
                   .Skip((Page - 1) * PerPage)
                   .Take((int)pageResult)
                   .ToListAsync();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -12,7 +13,7 @@ namespace api_nancurunaisa.Models
 
         public int idDia { get; set; }
         public string nombreDia { get; set; } = null!;
-
+        [JsonIgnore]
         public virtual ICollection<masajista> idMasajista { get; set; }
     }
 }

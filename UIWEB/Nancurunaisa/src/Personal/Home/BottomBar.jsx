@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Row, Col } from 'antd';
 import {
     HomeOutlined,
-    SearchOutlined,
     SettingOutlined,
     CalendarOutlined,
     HeartOutlined,
     EyeInvisibleOutlined,
-    EyeOutlined
+    EyeOutlined,
+    PieChartOutlined
 } from '@ant-design/icons';
 import "./BottomBar.css";
 import { useNavigate} from "react-router-dom";
@@ -23,7 +23,7 @@ function BottomBar (){
         {mul:6,sel:false},{mul:3,sel:false},{mul:2,sel:true},
         {mul:1.5,sel:false},{mul:1.2,sel:false}
     ]);
-    const [iscollapsed,setCollapsed] = useState(false);
+    const [iscollapsed,setCollapsed] = useState(localStorage.getItem("Interfaz_HideBottomBar")=="true"? true:false);
 
 
     const handleClick = (index) =>{
@@ -48,13 +48,13 @@ function BottomBar (){
                     Navigate("/Personal/Home");
                     break;
                 case 3:
-                    Navigate("/Personal/Buscar")
+                    Navigate("/Personal/Reportes")
                     break;
                 case 4:
                     Navigate("/Personal/Ajustes");
                     break;
                 default:
-                    console.log("NO hay")
+                    break;
             }
         }
     }
@@ -76,8 +76,8 @@ function BottomBar (){
                 <div >Inicio</div>
             </Col>
             <Col style={{display:iscollapsed?"none":""}} onClick={() => handleClick(3)} className={menu[3].sel ? Selected : Unselect} span={4}>
-                <SearchOutlined />
-                <div >Buscar</div>
+                <PieChartOutlined />
+                <div >Reportes</div>
             </Col>
             <Col style={{display:iscollapsed?"none":""}} onClick={() => handleClick(4)} className={menu[4].sel ? Selected : Unselect} span={4}>
                 <SettingOutlined />

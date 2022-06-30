@@ -6,7 +6,7 @@ const {footer} = Layout;
 function Footer(){
     return(
         <Layout>
-            <footer className="footer">Nancurunaisa ©2022 Created by Werlyn Rodriguez</footer>
+            <footer className="footer">Nancurunaisa ©2022 | Powered by Werlyn</footer>
         </Layout>
     )
 }

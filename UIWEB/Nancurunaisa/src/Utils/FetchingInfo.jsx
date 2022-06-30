@@ -1,14 +1,34 @@
+import { getDateToday } from "./Calwulator";
+const url = "http://172.23.173.158:5037/api/"
+
+/*LOGIN*/
+export async function loginUser(credentials) {
+  const res = await fetch(url+"token", {
+    method:"POST",
+    headers:{
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(credentials)
+  })
+  const result = await res.json();
+  return result;
+};
+
 /*Pagination All Methods */
 export async function GetByPagTeraTa(Page,perPage){
-    const res = await fetch("https://www.mecallapi.com/api/users?page=" + Page + "&per_page=" + perPage);
+    const res = await fetch(url+"Masajista/?Page="+Page+"&PerPage="+perPage);
     const result = await res.json();
     return result;
 }
 
-export async function GetByPagSucur(Page,perPage){
-    const res = await fetch("https://www.mecallapi.com/api/attractions?page=" + Page + "&per_page=" + perPage);
-    const result = await res.json();
-    return result;
+export async function GetByPagSucur(Page,perPage,search){
+  let urlCompleta = url+"Sucursal/?Page="+Page+"&PerPage="+perPage;
+  if (search != undefined && search != ""){
+    urlCompleta += "&nombreSucursal="+search;
+  }
+  const res = await fetch(urlCompleta);
+  const result = await res.json();
+  return result;
 }
 
 export async function GetByPagPacS(Page,perPage){
@@ -17,22 +37,42 @@ export async function GetByPagPacS(Page,perPage){
   return result;
 }
 
-export async function GetByPagTera(Page,perPage){
-  const res = await fetch("https://www.mecallapi.com/api/attractions?page=" + Page + "&per_page=" + perPage);
+export async function GetByPagTera(Page,perPage,search){
+  let urlCompleta = url+"Terapia/?Page="+Page+"&PerPage="+perPage;
+  if (search != undefined && search != ""){
+    urlCompleta += "&nombreTerapia="+search;
+  }
+  const res = await fetch(urlCompleta);
   const result = await res.json();
   return result;
 }
 
-export async function GetByPagCitas(Page,perPage){
-  /*const res = await fetch("https://www.mecallapi.com/api/attractions?page=" + Page + "&per_page=" + perPage);*/
-  /*const result = await res.json();*/
-  const result = [{Fecha:"2022-05-30",Hora:"19:00"}]
+export async function GetByPagCitas(Age){
+  const res = await fetch(url+"Cita?year="+Age);
+  const result = await res.json();
+  return result;
+}
+
+export async function GetByPagCubic(idSucursal,Page,perPage){
+  const res = await fetch(url+"Cubiculo?idSucursal="+idSucursal+"&Page="+Page+"&PerPage="+perPage);
+  const result = await res.json();
+  return result;
+}
+
+export async function GetbyPagPromos(Page,perPage){
+  /*const res = await fetch("https://www.mecallapi.com/api/users?page=" + Page + "&per_page=" + perPage);
+  const result = await res.json();*/
+  const result = [{idPromocion:0,nombrePromocion:"Promocion 1",descripcion:"Promocion1"},
+  {idPromocion:1,nombrePromocion:"Promocion 2",descripcion:"Promocion2"},
+  {idPromocion:2,nombrePromocion:"Promocion 3",descripcion:"Promocion3"},
+  {idPromocion:3,nombrePromocion:"Promocion 4",descripcion:"Promocion4"}]
   return result;
 }
 
 /*Get all information from specific id */
 export async function GetByIdTeraTa(id){
-    const res = await fetch("https://www.mecallapi.com/api/users/"+id);
+    //const res = await fetch("https://www.mecallapi.com/api/users/"+id);
+    const res = await fetch(url+"Masajista/"+id);
     const result = await res.json();
     return result;
 }
@@ -50,7 +90,19 @@ export async function GetByIdSucur(id){
 }
 
 export async function GetByIdTera(id){
-  const res = await fetch(" https://www.mecallapi.com/api/attractions/"+id);
+  const res = await fetch(url+"Terapia/"+id);
+  const result = await res.json();
+  return result;
+}
+
+export async function GetByIdCita(id){
+  const res = await fetch(url+"Cita/"+id);
+  const result = await res.json();
+  return result;
+}
+
+export async function GetByIdPromo(id){
+  const res = await fetch(" https://www.mecallapi.com/api/promotions/"+id);
   const result = await res.json();
   return result;
 }
@@ -80,9 +132,23 @@ export async function SearchTera(search){
   return result;
 }
 
+export async function SearchCita(search){
+  /*const res = await fetch(" https://www.mecallapi.com/api/attractions?search="+search);
+  const result = await res.json();
+  return result;*/
+  return [];
+}
+
+export async function SearchPromos(search){
+  /*const res = await fetch(" https://www.mecallapi.com/api/attractions?search="+search);
+  const result = await res.json();
+  return result;*/
+  return [];
+}
+
 /*Creating */
 export async function CreateTeraTa(data){
-    const res = await fetch('https://www.mecallapi.com/api/users/create', {
+    const res = await fetch(url+'Masajista', {
        method: 'POST',
        headers: {
          Accept: 'application/form-data',
@@ -119,12 +185,11 @@ export async function CreatePac(data){
 }
 
 export async function CreateTera(data){
-  const res = await fetch('https://www.mecallapi.com/api/auth/attractions/create', {
+  const res = await fetch(url+"Terapia", {
      method: 'POST',
      headers: {
        Accept: 'application/form-data',
        'Content-Type': 'application/json',
-       Authorization: "Bearer "+localStorage.getItem('accessToken')
      },body: JSON.stringify(data),
    })
    const result = await res.json();
@@ -132,16 +197,16 @@ export async function CreateTera(data){
 }
 
 /*Updating */
-export async function UpdateTeraTa(data){
-  const res = await fetch("https://www.mecallapi.com/api/users/update",{
+export async function UpdateTeraTa(id,data){
+  //const res = await fetch("https://www.mecallapi.com/api/users/update",{
+    const res = await fetch(url+"Masajista/"+id,{
     method:"PUT",
     headers: {
-      Accept: 'application/form-data',
-      'Content-Type': 'application/json',
+      Accept: '*/*',
+      'Content-Type': 'application/json-patch+json',
     },body: JSON.stringify(data)
-  })
-  const result = await res.json();
-     return result;
+  });
+  return res;
 }
 
 export async function UpdateSucursal(data){
@@ -169,22 +234,23 @@ export async function UpdatePac(data){
      return result;
 }
 
-export async function UpdateTera(data){
-  const res = await fetch("https://www.mecallapi.com/api/auth/attractions/update",{
+export async function UpdateTera(data,id){
+  const res = await fetch(url+"Terapia/"+id,{
     method:"PUT",
     headers: {
       Accept: 'application/form-data',
       'Content-Type': 'application/json',
-      Authorization: "Bearer "+localStorage.getItem('accessToken')
     },body: JSON.stringify(data),
   })
-  const result = await res.json();
-     return result;
-}
+  return res;
+  /*const result = await res.json();
+  return result;*/
+}//Authorization: "Bearer "+localStorage.getItem('accessToken')
 
 /*Deleting */
-export async function DeleteTeraTa(data){
-    const res = await fetch('https://www.mecallapi.com/api/users/delete', {
+export async function DeleteLogicTeraTa(id){
+    //const res = await fetch('https://www.mecallapi.com/api/users/delete', {
+    const res = await fetch("http://172.23.203.147:5037/api/Masajista/"+id,{
        method: 'DELETE',
        headers: {
          Accept: 'application/form-data',
@@ -192,8 +258,7 @@ export async function DeleteTeraTa(data){
        },
        body: JSON.stringify(data),
      })
-     const result = await res.json();
-     return result;
+     return res;
 }
 
 export async function DeleteSucur(data){
@@ -223,18 +288,15 @@ export async function DeletePac(data){
    return result;
 }
 
-export async function DeleteTera(data){
-  const res = await fetch('https://www.mecallapi.com/api/auth/attractions/delete', {
+export async function DeleteTera(id){
+  const res = await fetch(url+"Terapia/"+id, {
      method: 'DELETE',
      headers: {
        Accept: 'application/form-data',
        'Content-Type': 'application/json',
-       Authorization: "Bearer "+localStorage.getItem('accessToken')
-     },
-     body: JSON.stringify(data),
+     }
    })
-   const result = await res.json();
-   return result;
+   return res;
 }
 
 export async function FecthUSDNIORate(){

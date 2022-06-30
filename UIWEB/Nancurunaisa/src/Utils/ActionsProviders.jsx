@@ -10,6 +10,6 @@ export class TerataFormActionProvider{
 export function getaction(url){
     const action = url.split("/");
     return action[4];
-  }
+}
 
 export const FormActions={ Read:"View", Update:"Uptd", Add:"Add" }

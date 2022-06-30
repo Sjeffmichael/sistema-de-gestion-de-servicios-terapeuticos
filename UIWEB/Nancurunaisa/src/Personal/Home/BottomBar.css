@@ -10,7 +10,7 @@
     background-color: var(--bgNav);
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
-    z-index: 10;
+    /*z-index: 6;*/
     transition: all 0.3s ease 0s;
 }
 

@@ -1,22 +1,21 @@
-import {PageHeader,Typography, Layout, Pagination, List, Button, Avatar} from 'antd';
+import { Button, Layout, List, PageHeader, Pagination, Typography} from "antd";
+import SelectedItem from '../../../Components/Items/SelectedItem';
+import Searchbar from "../../../Components/SearchBar";
+import ItemView from '../../../Components/Items/TerapeutaItem';
 import { useNavigate} from "react-router-dom";
 import React, {useState,useEffect} from 'react';
-import "../../../Utils/TextUtils.css";
-import { CheckOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import ItemView from '../../../Components/Items/TerapeutaItem';
-import { getFirstWord, MapSelectedItems } from '../../../Utils/TextUtils';
-import Searchbar from '../../../Components/SearchBar';
-import { GetByPagPacS, SearchPacS } from '../../../Utils/FetchingInfo';
-import { FormActions } from '../../../Utils/ActionsProviders';
-import { AllowFunction, Ranges } from '../../../Utils/RangeProviders';
-import {Paciente} from '../../../Models/Models';
-import SelectedItem from '../../../Components/Items/SelectedItem';
+import { GetbyPagPromos, SearchPromos } from "../../../Utils/FetchingInfo";
+import { Promocion } from "../../../Models/Models";
+import { CheckOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { MapSelectedItems } from "../../../Utils/TextUtils";
+import { FormActions } from "../../../Utils/ActionsProviders";
+import { AllowFunction, Ranges } from "../../../Utils/RangeProviders";
 
 const { Title } = Typography;
 
-export default function Pacientes(props){
+export default function Promos(props) {
     let Navigate = useNavigate();/*Go back */
-    const [PacS, setPacS] = useState([]);
+    const [Proms, setProms] = useState([]);
     const perPageDefault = 5;
     const [totalItems,setTotalItems] = useState(0);
     const [LoadingList,setLoadingList] = useState(true);
@@ -28,29 +27,30 @@ export default function Pacientes(props){
     const grid = isPicker? {}:{ gutter: 16, xs: 1, sm: 1, md: 2,lg: 2,xl: 3,xxl: 3 }
 
     const [selectionMode,setSelectionMode] = useState(isMulti?true:false);//is selection mode
+
     useEffect(() => {
-        getPacS(1)
+        getPromos(1)
       }, [])
 
     const setList = (result) =>{
-        setPacS(result);
+        setProms(result);
         setLoadingList(false);
     }
 
-    const getPacS=(Page)=>{
-        GetByPagPacS(Page,perPageDefault)
+    const getPromos=(Page)=>{
+        GetbyPagPromos(Page,perPageDefault)
         .then((result)=>{
-            setTotalItems(result.total);
+            setTotalItems(5);
             const data = [];
-            result.data.map((item)=>{
-                data.push(new Paciente(item.id,item.fname,item.lname,"F",12,"","","","","",MultiData.find((sel)=>{return sel.idPaciente==item.id})? true:false));
+            result.map((item)=>{
+                data.push(new Promocion(item.idPromocion,item.nombrePromocion,item.descripcion,MultiData.find((sel)=>{return sel.idPromocion==item.idPromocion})? true:false));
             });
             setList(data);})
     }
 
-    const PacSSearch =(bus)=>{
+    const PromoSearch =(bus)=>{
         setLoadingList(true);
-        SearchPacS(bus)
+        SearchPromos(bus)
         .then((result)=>{
             setList(result);
           }
@@ -59,26 +59,26 @@ export default function Pacientes(props){
 
     const changePage=(Page)=>{
         setLoadingList(true)
-        getPacS(Page);
+        getPromos(Page);
     }
 
-    const setSelectedPac =(index,sel)=>{
-        let newArr = [...PacS]; // copying the old datas array
+    const setSelectedItem =(index,sel)=>{
+        let newArr = [...Proms]; // copying the old datas array
         newArr[index].selected = sel; //key and value
-        setPacS(newArr);
+        setProms(newArr);
     }
 
     const setMultiSelected =(index,id,selected)=>{//multi selection select or deselect
         if(selected){//if is selected, i want to deselect 
-            setMultiData(MultiData.filter(item=>item.idPaciente!=id));
-            setSelectedPac(index,false);
+            setMultiData(MultiData.filter(item=>item.idPromocion!=id));
+            setSelectedItem(index,false);
             if(MultiData.length == 1){
                 setMultiData([]);
                 setSelectionMode(false);
             }
         }else{
-            setMultiData(MultiData => [...MultiData, PacS[index]]);
-            setSelectedPac(index,true);
+            setMultiData(MultiData => [...MultiData, Proms[index]]);
+            setSelectedItem(index,true);
         }
     }
 
@@ -86,14 +86,14 @@ export default function Pacientes(props){
         //setMultiData(MultiData.slice(index,1));
         setMultiData(MultiData.filter((item,indexF)=>indexF!=index));
 
-        let newArr = [...PacS]; // copying the old datas array
+        let newArr = [...Proms]; // copying the old datas array
         newArr.map((item)=>{
-            if(item.idPaciente==id){
+            if(item.idPromocion==id){
                 item.selected = false;
             }
         });
 
-        setPacS(newArr);
+        setProms(newArr);
 
         if(MultiData.length == 1){
             setMultiData([]);
@@ -101,15 +101,16 @@ export default function Pacientes(props){
         }
     }
 
+
     const onLongPress = (id,name,selected,index) => {
         if(isPicker){
-            props.onFinish(PacS[index]);
+            props.onFinish(Proms[index]);
         }else{
            if(selectionMode){//if iam in multi Selection Mode
                 setMultiSelected(index,id,selected);
             }else{
-                setMultiData(MultiData => [...MultiData, PacS[index]]);
-                setSelectedPac(index,true);
+                setMultiData(MultiData => [...MultiData, Proms[index]]);
+                setSelectedItem(index,true);
                 setSelectionMode(true);
             } 
         }        
@@ -117,7 +118,7 @@ export default function Pacientes(props){
 
     const onclick=(id,name,selected,index)=>{
         if(isPicker){
-            props.onFinish(PacS[index]);
+            props.onFinish(Proms[index]);
         }else if (isMulti){
             if(!selectionMode) { setSelectionMode(true); }
             setMultiSelected(index,id,selected);
@@ -125,10 +126,10 @@ export default function Pacientes(props){
            if(selectionMode){//if iam in multi Selection Mode
                 setMultiSelected(index,id,selected);
             }else{
-                if(AllowFunction([Ranges.Owner,Ranges.Employ])){//Owner and Employ can edit
-                    Navigate("/Personal/Clinica/Paciente/"+FormActions.Update+"/"+id);
+                if(AllowFunction([Ranges.Owner])){//Owner and Employ can edit
+                    Navigate("/Personal/Clinica/Promo/"+FormActions.Update+"/"+id);
                 }else{
-                    Navigate("/Personal/Clinica/Paciente/"+FormActions.Read+"/"+id);
+                    Navigate("/Personal/Clinica/Promo/"+FormActions.Read+"/"+id);
                 }
             }
         }
@@ -144,30 +145,28 @@ export default function Pacientes(props){
         }
     }
 
-    const onClickAddPacs=()=>{
-        Navigate("/Personal/Clinica/Paciente/"+FormActions.Add);
+    const onClickAddPromos=()=>{
+        Navigate("/Personal/Clinica/Promo/"+FormActions.Add);
     }
 
-    return(<Layout>
-        <PageHeader className="TopTittle" ghost={false} onBack={()=>{onBack()}} title={<Title level={2}>Pacientes</Title>}
+    return (<Layout>
+        <PageHeader className="TopTittle" ghost={false} onBack={()=>{onBack()}} title={<Title level={2}>Promociones</Title>}
         extra={<><Button style={{display:selectionMode && !isPicker && !isMulti?"":"none"}} shape="circle" size='large' 
-                onClick={()=>{console.log(MultiData)}} icon={<DeleteOutlined/>}/></>}>
-            
-            <MapSelectedItems data={MultiData} item={(item,index)=>(<SelectedItem key={index} index={index} text={item.getShortName} avatar={""} 
-            onClick={(index)=>{desSelectItem(item.idPaciente,index)}} />)}/>
-            
+        onClick={()=>{console.log(MultiData)}} icon={<DeleteOutlined/>}/></>}>
+            <MapSelectedItems data={MultiData} item={(item,index)=>(<SelectedItem key={index} index={index} text={item.nombrePromocion} avatar={""} 
+            onClick={(index)=>{desSelectItem(item.idPromocion,index)}}/>)}/>
         </PageHeader>
-        <button className='BottomRoundButton' onClick={()=>{onClickAddPacs()}} style={{display:isPicker||isMulti?"none":""}}><PlusOutlined/></button>
+        <button className='BottomRoundButton' onClick={()=>{onClickAddPromos()}} style={{display:isPicker||isMulti?"none":""}}><PlusOutlined/></button>
         <button className='BottomRoundButton' onClick={()=>{props.onFinish(MultiData)}} style={{display:selectionMode && isMulti?"":"none"}}><CheckOutlined/></button>
         <Layout className='ContentLayout'>
-            <Searchbar onSearch={(value)=>{PacSSearch(value)}} loading={LoadingList}/>
+            <Searchbar onSearch={(value)=>{PromoSearch(value)}} loading={LoadingList}/>
             <Pagination onChange={(page)=>{changePage(page)}} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"10px"}}/>
             <List style={{marginTop:"10px"}} loading={LoadingList} grid={grid}
-            dataSource={PacS} renderItem={(pacS,index) => (
-                <ItemView id={pacS.idPaciente} avatar={""} onClick={(id,name,selected)=>{onclick(id,name,selected,index)}}
+            dataSource={Proms} renderItem={(promo,index) => (
+                <ItemView id={promo.idPromocion} avatar={""} onClick={(id,name,selected)=>{onclick(id,name,selected,index)}}
                 onLongPress={(id,name,selected)=>{onLongPress(id,name,selected,index)}} mulSelMode={selectionMode}
-                text={pacS.getShortName} selected={pacS.selected}/>
+                text={promo.nombrePromocion} selected={promo.selected}/>
             )}/>
         </Layout>
-    </Layout>)
-}
+        </Layout>);
+        }

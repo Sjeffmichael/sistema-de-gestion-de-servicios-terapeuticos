@@ -20,12 +20,11 @@ import Terapias from './Personal/Clinica/Terapia/Terapias';
 import TeraDetail from './Personal/Clinica/Terapia/TeraDetail';
 
 import { FormActions } from './Utils/ActionsProviders';
-import { Allow, Ranges } from './Utils/RangeProviders';
-
-import Facturas from "./Personal/Clinica/Facturas";
+import { Allow, Deny, Ranges } from './Utils/RangeProviders';
 
 import Citas from "./Personal/Citas/Citas";
-import Buscar from "./Personal/Buscar/Buscar";
+import CitaDetail from './Personal/Citas/CitaDetail';
+import ReportsMenu from './Personal/Reports/Reports';
 
 import BottomBar from "./Personal/Home/BottomBar";
 
@@ -37,6 +36,10 @@ import {
   Route,
   Routes
 } from "react-router-dom";
+import Promos from './Personal/Clinica/Promociones/Promos';
+import Promo from './Personal/Clinica/Promociones/Promo';
+import SucRep from './Personal/Reports/SucRep';
+
 
 
 function Nancurunaisa(){
@@ -51,17 +54,24 @@ function Nancurunaisa(){
           <Route path='Home' element={<Home key="Home"/>}/>
 
           <Route path='Citas' element={<Citas key="Citas"/>}/>
+          <Route path='Cita' element={<Outlet key="OutCita"/>}>
+            <Route element={<Deny Exclude={[Ranges.Employ]}/>}>
+              <Route path={FormActions.Update+"/:idCita"} element={<CitaDetail key="CitaUpdt"/>}/>
+            </Route>
+            <Route path={FormActions.Add} element={<CitaDetail key="CitaAdd"/>}/>
+            <Route path={FormActions.Read+"/:idCita"} element={<CitaDetail key="CitaRead"/>}/>
+          </Route>
 
           <Route path='Clinica' element={<Outlet key="OutClin"/>}>
             <Route index element={<Clinica key="Clinic"/>}/>
 
             <Route path='Pacientes' element={<Pacientes key="PacS"/>}/>
             <Route path='Paciente' element={<Outlet key="OutTPacS"/>}>
-              <Route element={<Allow Permited={[Ranges.Owner,Ranges.Manager]}/>}>
-                <Route path={FormActions.Update+'/:idPA'} element={<PacSDetail key="PacSUpdt"/>}/>
-                <Route path={FormActions.Add} element={<PacSDetail key="PacSAdd"/>}/>
-              </Route>
+            <Route element={<Deny Exclude={[Ranges.Manager]}/>}>
+              <Route path={FormActions.Update+'/:idPA'} element={<PacSDetail key="PacSUpdt"/>}/>
+              <Route path={FormActions.Add} element={<PacSDetail key="PacSAdd"/>}/>
               <Route path={FormActions.Read+'/:idPA'} element={<PacSDetail key="PacSRead"/>}/>
+            </Route>
             </Route>
 
             <Route path="Terapeutas" element={<Terapeutas key="TeraTas"/>}/>
@@ -91,7 +101,19 @@ function Nancurunaisa(){
               <Route path={FormActions.Read+'/:idTE'} element={<TeraDetail key="TERead"/>}/>
             </Route>
 
+            <Route path="Promos" element={<Promos key="Promos"/>}/>
+            <Route path='Promo' element={<Outlet key="OutP"/>}>
+              <Route path={FormActions.Update+"/:idP"} element={<Promo key="PromoUpdt"/>}/>
+              <Route path={FormActions.Add} element={<Promo key="PromoAdd"/>}/>
+              <Route path={FormActions.Read+"/:idP"} element={<Promo key="PromoRead"/>}/>
+            </Route>
+
             <Route path='*' element={<Clinica key="ClinicD"/>}/>
+          </Route>
+
+          <Route path="Reportes" element={<ReportsMenu key="Reportes"/>}/>
+          <Route path='Reporte' element={<Outlet key="OutR"/>}>
+            <Route path={"Sucursales/:idFec"} element={<SucRep key="RpSuc"/>}/>
           </Route>
 
           <Route path='Ajustes' element={<Ajustes key="Settings"/>}/>

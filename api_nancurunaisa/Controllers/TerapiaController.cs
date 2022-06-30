@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,55 +11,55 @@ namespace api_nancurunaisa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PacienteControler : ControllerBase
+    public class TerapiaController : ControllerBase
     {
         private readonly nancurunaisadbContext _context;
 
-        public PacienteControler(nancurunaisadbContext context)
+        public TerapiaController(nancurunaisadbContext context)
         {
             _context = context;
         }
 
-        // GET: api/PacienteControler
+        // GET: api/Terapia
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<paciente>>> Getpaciente()
+        public async Task<ActionResult<IEnumerable<terapia>>> Getterapia()
         {
-          if (_context.paciente == null)
+          if (_context.terapia == null)
           {
               return NotFound();
           }
-            return await _context.paciente.ToListAsync();
+            return await _context.terapia.ToListAsync();
         }
 
-        // GET: api/PacienteControler/5
+        // GET: api/Terapia/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<paciente>> Getpaciente(int id)
+        public async Task<ActionResult<terapia>> Getterapia(int id)
         {
-          if (_context.paciente == null)
+          if (_context.terapia == null)
           {
               return NotFound();
           }
-            var paciente = await _context.paciente.FindAsync(id);
+            var terapia = await _context.terapia.FindAsync(id);
 
-            if (paciente == null)
+            if (terapia == null)
             {
                 return NotFound();
             }
 
-            return paciente;
+            return terapia;
         }
 
-        // PUT: api/PacienteControler/5
+        // PUT: api/Terapia/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> Putpaciente(int id, paciente paciente)
+        public async Task<IActionResult> Putterapia(int id, terapia terapia)
         {
-            if (id != paciente.idPaciente)
+            if (id != terapia.idTerapia)
             {
                 return BadRequest();
             }
 
-            _context.Entry(paciente).State = EntityState.Modified;
+            _context.Entry(terapia).State = EntityState.Modified;
 
             try
             {
@@ -67,7 +67,7 @@ namespace api_nancurunaisa.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!pacienteExists(id))
+                if (!terapiaExists(id))
                 {
                     return NotFound();
                 }
@@ -80,44 +80,44 @@ namespace api_nancurunaisa.Controllers
             return NoContent();
         }
 
-        // POST: api/PacienteControler
+        // POST: api/Terapia
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<paciente>> Postpaciente(paciente paciente)
+        public async Task<ActionResult<terapia>> Postterapia(terapia terapia)
         {
-          if (_context.paciente == null)
+          if (_context.terapia == null)
           {
-              return Problem("Entity set 'nancurunaisadbContext.paciente'  is null.");
+              return Problem("Entity set 'nancurunaisadbContext.terapia'  is null.");
           }
-            _context.paciente.Add(paciente);
+            _context.terapia.Add(terapia);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getpaciente", new { id = paciente.idPaciente }, paciente);
+            return CreatedAtAction("Getterapia", new { id = terapia.idTerapia }, terapia);
         }
 
-        // DELETE: api/PacienteControler/5
+        // DELETE: api/Terapia/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletepaciente(int id)
+        public async Task<IActionResult> Deleteterapia(int id)
         {
-            if (_context.paciente == null)
+            if (_context.terapia == null)
             {
                 return NotFound();
             }
-            var paciente = await _context.paciente.FindAsync(id);
-            if (paciente == null)
+            var terapia = await _context.terapia.FindAsync(id);
+            if (terapia == null)
             {
                 return NotFound();
             }
 
-            _context.paciente.Remove(paciente);
+            _context.terapia.Remove(terapia);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool pacienteExists(int id)
+        private bool terapiaExists(int id)
         {
-            return (_context.paciente?.Any(e => e.idPaciente == id)).GetValueOrDefault();
+            return (_context.terapia?.Any(e => e.idTerapia == id)).GetValueOrDefault();
         }
     }
 }

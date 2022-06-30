@@ -15,12 +15,13 @@ namespace api_nancurunaisa.Models
         }
 
         public int idCita { get; set; }
-        public int idHabitacion { get; set; }
+        public int? idHabitacion { get; set; }
         public DateTime fechaHora { get; set; }
         public bool? pendiente { get; set; }
         public string? direccion_domicilio { get; set; }
+        public string? color { get; set; }
 
-        public virtual habitacion idHabitacionNavigation { get; set; } = null!;
+        public virtual habitacion? idHabitacionNavigation { get; set; }
         public virtual ICollection<factura> factura { get; set; }
         public virtual ICollection<pacienteCita> pacienteCita { get; set; }
 

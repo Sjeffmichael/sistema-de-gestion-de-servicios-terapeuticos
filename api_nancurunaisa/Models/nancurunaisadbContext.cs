@@ -20,6 +20,12 @@ namespace api_nancurunaisa.Models
         public virtual DbSet<APNP> APNP { get; set; } = null!;
         public virtual DbSet<APP> APP { get; set; } = null!;
         public virtual DbSet<TipoAFP> TipoAFP { get; set; } = null!;
+        public virtual DbSet<VwCitasPendientes> VwCitasPendientes { get; set; } = null!;
+        public virtual DbSet<VwCitasPendientesDomicilio> VwCitasPendientesDomicilio { get; set; } = null!;
+        public virtual DbSet<VwCitasPendientesMasajista> VwCitasPendientesMasajista { get; set; } = null!;
+        public virtual DbSet<VwCitasPendientesSucursal> VwCitasPendientesSucursal { get; set; } = null!;
+        public virtual DbSet<VwMasajistasActivos> VwMasajistasActivos { get; set; } = null!;
+        public virtual DbSet<VwPacientesCitasPendietes> VwPacientesCitasPendietes { get; set; } = null!;
         public virtual DbSet<amnanesis> amnanesis { get; set; } = null!;
         public virtual DbSet<amnanesisInfo> amnanesisInfo { get; set; } = null!;
         public virtual DbSet<cita> cita { get; set; } = null!;
@@ -112,6 +118,111 @@ namespace api_nancurunaisa.Models
                     .HasConstraintName("FK__TipoAFP__idAmnan__03F0984C");
             });
 
+            modelBuilder.Entity<VwCitasPendientes>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwCitasPendientes");
+
+                entity.Property(e => e.color).HasMaxLength(10);
+
+                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+
+                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+
+                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<VwCitasPendientesDomicilio>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwCitasPendientesDomicilio");
+
+                entity.Property(e => e.color).HasMaxLength(10);
+
+                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+
+                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+
+                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<VwCitasPendientesMasajista>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwCitasPendientesMasajista");
+
+                entity.Property(e => e.Citas_Pendientes).HasColumnName("Citas Pendientes");
+
+                entity.Property(e => e.apellidos).HasMaxLength(50);
+
+                entity.Property(e => e.nombres).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<VwCitasPendientesSucursal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwCitasPendientesSucursal");
+
+                entity.Property(e => e.color).HasMaxLength(10);
+
+                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+
+                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+
+                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<VwMasajistasActivos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwMasajistasActivos");
+
+                entity.Property(e => e.apellidos).HasMaxLength(50);
+
+                entity.Property(e => e.correo).HasMaxLength(256);
+
+                entity.Property(e => e.fechaNacimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.foto)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.horaEntrada).HasColumnType("datetime");
+
+                entity.Property(e => e.horaSalida).HasColumnType("datetime");
+
+                entity.Property(e => e.idMasajista).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.nombres).HasMaxLength(50);
+
+                entity.Property(e => e.numCel).HasMaxLength(20);
+
+                entity.Property(e => e.password).HasMaxLength(50);
+
+                entity.Property(e => e.roll).HasMaxLength(30);
+
+                entity.Property(e => e.sexo)
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<VwPacientesCitasPendietes>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VwPacientesCitasPendietes");
+
+                entity.Property(e => e.apellidos).HasMaxLength(50);
+
+                entity.Property(e => e.nombres).HasMaxLength(50);
+            });
+
             modelBuilder.Entity<amnanesis>(entity =>
             {
                 entity.HasKey(e => e.idAmnanesis)
@@ -161,6 +272,8 @@ namespace api_nancurunaisa.Models
                 entity.HasIndex(e => e.idCita, "UQ__cita__814F3127699C3400")
                     .IsUnique();
 
+                entity.Property(e => e.color).HasMaxLength(10);
+
                 entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
 
                 entity.Property(e => e.fechaHora).HasColumnType("datetime");
@@ -172,7 +285,6 @@ namespace api_nancurunaisa.Models
                 entity.HasOne(d => d.idHabitacionNavigation)
                     .WithMany(p => p.cita)
                     .HasForeignKey(d => d.idHabitacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__cita__idHabitaci__7C4F7684");
 
                 entity.HasMany(d => d.idMasajista)
@@ -275,7 +387,7 @@ namespace api_nancurunaisa.Models
 
                 entity.Property(e => e.nombres).HasMaxLength(50);
 
-                entity.Property(e => e.numCel).HasMaxLength(14);
+                entity.Property(e => e.numCel).HasMaxLength(20);
 
                 entity.Property(e => e.password).HasMaxLength(50);
 
@@ -321,7 +433,7 @@ namespace api_nancurunaisa.Models
 
                 entity.Property(e => e.nombres).HasMaxLength(50);
 
-                entity.Property(e => e.numCel).HasMaxLength(14);
+                entity.Property(e => e.numCel).HasMaxLength(20);
 
                 entity.Property(e => e.profesion_oficio).HasMaxLength(50);
 
@@ -419,7 +531,9 @@ namespace api_nancurunaisa.Models
                 entity.HasIndex(e => e.idTipoAPNP, "UQ__tipoAPNP__2B8940BAEADA53B9")
                     .IsUnique();
 
-                entity.Property(e => e.cantFrec).HasMaxLength(50);
+                entity.Property(e => e.cantidad).HasMaxLength(20);
+
+                entity.Property(e => e.frecuencia).HasMaxLength(30);
 
                 entity.Property(e => e.nombreAPNP).HasMaxLength(15);
 

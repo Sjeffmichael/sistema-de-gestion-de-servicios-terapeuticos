@@ -1,9 +1,10 @@
-import { Button, Divider, Form, Input, Layout,Menu,Typography } from "antd";
-import { BlockRead, FormAvName, FormPageHeader, sectionStyle } from "../../../Utils/TextUtils";
+import { Button, Divider, Form, Input, Layout,Menu,message,Typography } from "antd";
+import { BlockRead, ButtonSubmit, FormAvName, FormPageHeader, sectionStyle } from "../../../Utils/TextUtils";
 import React, {useState,useEffect} from 'react';
 import { Promocion } from "../../../Models/Models";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getaction, TerataFormActionProvider } from "../../../Utils/ActionsProviders";
+import { CreatePromo, GetByIdPromo, GetbyPagPromos, UpdatePromo } from "../../../Utils/FetchingInfo";
 const { Title } = Typography;
 
 export default function Promo() {
@@ -24,9 +25,52 @@ export default function Promo() {
         useEffect(() => {PromoGet(idP)},[])
     }
     const PromoGet = () =>{
-        setPromo(new Promocion(1,"Promocion1","50% de descueno a todas las personas gays",false));
-        setLoading(false);
-        form.resetFields();
+        setLoading(true);
+        GetByIdPromo(idP).then((result)=>{
+            setPromo(result);
+            setLoading(false);
+            form.resetFields();
+        }).catch((error)=>{
+            message.error("Hubo un error",2);
+            setloading(false);
+            Navigate(-1);
+        });
+    }
+
+    const onFinish =() =>{
+        setloading(true);
+        if (ActionsProvider.isAdd) {
+            var data ={
+                "nombrePromocion": form.getFieldValue("Nombre"),
+                "descripcion": form.getFieldValue("Desc"),
+                "activo": true,
+                "idCita":[]
+            }
+            CreatePromo(data).then((result)=>{
+                message.success("Promocion creada",2);
+                setloading(false);
+                Navigate(-1);
+            }).catch((error)=>{
+                message.error("Hubo un error",2);
+                setloading(false);
+            });
+        }else{
+            var data = {
+                "idPromocion": idP,
+                "nombrePromocion": form.getFieldValue("Nombre"),
+                "descripcion": form.getFieldValue("Desc"),
+                "activo": true,
+                "idCita":[]
+            }
+            UpdatePromo(idP,data).then((result)=>{
+                message.success("Promocion actualizada",2);
+                setloading(false);
+                Navigate(-1);
+            }).catch((error)=>{
+                message.error("Hubo un error",2);
+                setloading(false);
+            });
+        }
     }
 
     const userMenu = (
@@ -40,9 +84,9 @@ export default function Promo() {
 
     return (<div>
         <BlockRead Show={ActionsProvider.isRead}/>
-        <FormPageHeader ActionProv={ActionsProvider} Text="Terapia" menu={userMenu}/>
+        <FormPageHeader ActionProv={ActionsProvider} Text="Promocion" menu={userMenu}/>
         <div className='BackImageCollapsible' style={{display:ActionsProvider.isAdd? "none":""}}/>
-        <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={""} Text={Promo.name}/>
+        <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={""} Text={Promo.nombrePromocion}/>
 
         <Layout className='ContentLayout' style={{display:Loading ? "None":""}}>
         <Form onFinish={()=>{onFinish()}} onFinishFailed={(e)=>{form.scrollToField(e.errorFields[0].name)}} 
@@ -61,6 +105,7 @@ export default function Promo() {
                         <Input.TextArea type="text" maxLength={100} placeholder='Descripción'/>
                     </Form.Item>
                 </div>
+                <ButtonSubmit ActionProv={ActionsProvider} isLoading={isLoading}/>
             </Form>
         </Layout>
     </div>);

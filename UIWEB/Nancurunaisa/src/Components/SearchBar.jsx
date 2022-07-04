@@ -7,7 +7,7 @@ export default function Searchbar(props){
         if (typeof props.onSearch === "function"){
             props.onSearch(search);
         }
-        e.preventDefault();
+        //e.preventDefault();
     }
 
     return (

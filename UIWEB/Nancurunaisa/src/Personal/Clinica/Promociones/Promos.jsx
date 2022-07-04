@@ -1,4 +1,4 @@
-import { Button, Layout, List, PageHeader, Pagination, Typography} from "antd";
+import { Button, Layout, List, message, PageHeader, Pagination, Typography} from "antd";
 import SelectedItem from '../../../Components/Items/SelectedItem';
 import Searchbar from "../../../Components/SearchBar";
 import ItemView from '../../../Components/Items/TerapeutaItem';
@@ -19,6 +19,8 @@ export default function Promos(props) {
     const perPageDefault = 5;
     const [totalItems,setTotalItems] = useState(0);
     const [LoadingList,setLoadingList] = useState(true);
+    const [search,setSearch] = useState("");
+    const [page,setPage] = useState(1);
 
     const isPicker = props.picker==true? true:false
     const isMulti = props.multi==true? true:false
@@ -29,7 +31,7 @@ export default function Promos(props) {
     const [selectionMode,setSelectionMode] = useState(isMulti?true:false);//is selection mode
 
     useEffect(() => {
-        getPromos(1)
+        getPromos(page,search);
       }, [])
 
     const setList = (result) =>{
@@ -37,29 +39,28 @@ export default function Promos(props) {
         setLoadingList(false);
     }
 
-    const getPromos=(Page)=>{
-        GetbyPagPromos(Page,perPageDefault)
-        .then((result)=>{
-            setTotalItems(5);
+    const getPromos=(Page,search)=>{
+        setLoadingList(true);
+        GetbyPagPromos(Page,perPageDefault,search).then((result)=>{
+            setTotalItems(result.pages*perPageDefault);
             const data = [];
-            result.map((item)=>{
+            result.promociones.map((item)=>{
                 data.push(new Promocion(item.idPromocion,item.nombrePromocion,item.descripcion,MultiData.find((sel)=>{return sel.idPromocion==item.idPromocion})? true:false));
             });
-            setList(data);})
+            setList(data);
+        }).catch((err)=>{
+            message.error(err);});
     }
 
-    const PromoSearch =(bus)=>{
-        setLoadingList(true);
-        SearchPromos(bus)
-        .then((result)=>{
-            setList(result);
-          }
-        )
+    const onSearch = (value) =>{
+        setSearch(value);
+        setPage(1);
+        getPromos(1,value);
     }
 
-    const changePage=(Page)=>{
-        setLoadingList(true)
-        getPromos(Page);
+    const onChangePage = (page) =>{
+        setPage(page);
+        getPromos(page,search);
     }
 
     const setSelectedItem =(index,sel)=>{
@@ -159,8 +160,8 @@ export default function Promos(props) {
         <button className='BottomRoundButton' onClick={()=>{onClickAddPromos()}} style={{display:isPicker||isMulti?"none":""}}><PlusOutlined/></button>
         <button className='BottomRoundButton' onClick={()=>{props.onFinish(MultiData)}} style={{display:selectionMode && isMulti?"":"none"}}><CheckOutlined/></button>
         <Layout className='ContentLayout'>
-            <Searchbar onSearch={(value)=>{PromoSearch(value)}} loading={LoadingList}/>
-            <Pagination onChange={(page)=>{changePage(page)}} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"10px"}}/>
+            <Searchbar search={search} onSearch={(value)=>{onSearch(value)}} loading={LoadingList}/>
+            <Pagination onChange={(page)=>{onChangePage(page)}} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"10px"}}/>
             <List style={{marginTop:"10px"}} loading={LoadingList} grid={grid}
             dataSource={Proms} renderItem={(promo,index) => (
                 <ItemView id={promo.idPromocion} avatar={""} onClick={(id,name,selected)=>{onclick(id,name,selected,index)}}

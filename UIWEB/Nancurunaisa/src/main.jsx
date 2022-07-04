@@ -38,7 +38,7 @@ import {
 } from "react-router-dom";
 import Promos from './Personal/Clinica/Promociones/Promos';
 import Promo from './Personal/Clinica/Promociones/Promo';
-import SucRep from './Personal/Reports/SucRep';
+import SucRep from './Personal/Reports/SucSRep';
 
 
 

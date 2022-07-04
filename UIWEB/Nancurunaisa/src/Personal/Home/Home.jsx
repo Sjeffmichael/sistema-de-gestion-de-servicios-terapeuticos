@@ -13,7 +13,7 @@ function WelcomeMessage(){
     } else if (Time>=18 && Time<24) {
         Message = "Buenas noches";
     } else {
-        Message = "Descansando";
+        Message = "Descansandochi";
     }
     return (Message);
 }
@@ -26,9 +26,6 @@ function Home (){
     const [HCA,setHCA] = useState(0);//Hoy citas atendidas
     const [PCPA,setPCPA] = useState(0);//Personal citas por atender
     const [PCAD,setPPAD] = useState(0);//Personal a domicilio
-
-    useEffect(()=>{},[]);
-
 
     useEffect(() => {
         getThingsHome();
@@ -45,9 +42,9 @@ function Home (){
     return (<div>
         <div className="BackMenu"/>
         <Typography.Title level={2} style={{marginTop:"20px",marginLeft:"20px",color:"white"}}>{message}</Typography.Title>
+        <Skeleton loading={true} style={{display:LoadingList?"":"none"}} active paragraph={{ rows: 4 }}/>
+        <Layout className='ContentLayout' style={{display:LoadingList?"none":"",borderTopLeftRadius:"50px",borderTopRightRadius:"50px",backgroundColor:"white"}}>
 
-        <Layout className='ContentLayout' style={{borderTopLeftRadius:"50px",borderTopRightRadius:"50px",backgroundColor:"white"}}>
-            <Skeleton loading={true} style={{display:LoadingList?"":"none"}} active paragraph={{ rows: 4 }}/>
             <Divider orientation="left">Hoy</Divider>
             <Space size={[8,16]} wrap>
                 <TitleNum title="Citas por Atender" num="10"/>

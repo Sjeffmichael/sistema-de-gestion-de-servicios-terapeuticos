@@ -24,8 +24,7 @@ export default function ItemViewCita(props){
             </div>}>
             <div>
                 <Space split={<Divider type="vertical" />}>
-                <Typography.Text>Dentro de 3 Horas</Typography.Text>
-                <Typography.Text>{props.hab!="-1"? ("Cubículo: "+ props.hab):"Domicilio"}</Typography.Text>
+                <Typography.Text>Cita</Typography.Text>
             </Space>
             </div>
             

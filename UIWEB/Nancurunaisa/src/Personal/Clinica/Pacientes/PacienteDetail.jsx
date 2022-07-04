@@ -35,16 +35,13 @@ export default function PacSDetail(){
 
     const PacGet = () =>{
         GetByIdPac(idPA).then((result)=>{
-            if (result["status"]==="ok") {
-                setLoading(false);
-                setPac(result.user);
-                //setisWorking();
-                form.resetFields();
-            }else{
-                message.error("Hubo un error",2);
-                setloading(false);
-                Navigate(-1);
-            }
+            setLoading(false);
+            setPac(result);
+            //setisWorking();
+            form.resetFields();
+        }).catch((err)=>{
+            setLoading(false);
+            message.error(err);
         })
     }
 
@@ -52,18 +49,24 @@ export default function PacSDetail(){
         setloading(true);
         if (ActionsProvider.isAdd) {
             var data = {
-                'fname': form.getFieldValue("Nombres"),
-                'lname': form.getFieldValue("Apellidos"),
-                'username': form.getFieldValue("Country"),
-                'email': form.getFieldValue("Nombres")+"@gmail.com",
-                'avatar': "https://source.unsplash.com/random/800x600"}
-                CreatePac(data).then((result)=>{
-            if (result['status'] === 'ok') {
+                "nombres": form.getFieldValue("Nombres"),
+                "apellidos": form.getFieldValue("Apellidos"),
+                "sexo": form.getFieldValue("Gender"),
+                "edad": 47,
+                "nacionalidad": form.getFieldValue("Country"),
+                "profesion_oficio": "Systems Administrator I",
+                "horas_trabajo": 6,
+                "numCel": form.getFieldValue("Phone"),
+                "fecha_nacimiento": moment(form.getFieldValue("Birth")).format("YYYY-MM-DD"),
+                "amnanesis": []
+            }
+            CreatePac(data).then((result)=>{
                 message.success("Paciente Añadido",1).then(()=>{
                 setloading(false);
-                Navigate(-1);
-                })
-            }else{message.error("No se pudo añadir",2);setloading(false)}
+                Navigate(-1);})
+            }).catch((err)=>{
+                setloading(false);
+                message.error(err);
             })
         }else{
             var data = {'id':idPA,"fname": form.getFieldValue("Nombres")}
@@ -92,8 +95,6 @@ export default function PacSDetail(){
 
     const userMenu = (
     <Menu style={{width:"200px",borderRadius:"20px"}}>
-        <Menu.Item key="1">Item 1</Menu.Item>
-        <Menu.Item key="2" onClick={()=>{}}>Item 2</Menu.Item>
         <Menu.Item key="3">{Pac.Active == true? "Desactivar":"Activar"}</Menu.Item>
         <Menu.Divider />
         <Menu.Item key="4">
@@ -111,7 +112,7 @@ export default function PacSDetail(){
         <FormPageHeader ActionProv={ActionsProvider} Text="Paciente" menu={userMenu}/>
         <div className='BackImageCollapsible' style={{display:ActionsProvider.isAdd? "none":""}}/>
 
-        <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={Pac.avatar} Text={Pac.fname+" "+Pac.lname}/>
+        <FormAvName ActionProv={ActionsProvider} Loading={Loading} Avatar={""} Text={Pac.nombres+" "+Pac.apellidos}/>
 
         <Layout className='ContentLayout' style={{display:Loading ? "None":""}}>
             <div style={{zIndex:"6",display:ActionsProvider.isAdd? "none":"flex"}}>
@@ -119,9 +120,9 @@ export default function PacSDetail(){
             </div>
 
             <Form onFinish={()=>{onFinish()}} onFinishFailed={(e)=>{form.scrollToField(e.errorFields[0].name)}} 
-            initialValues={{Nombres:Pac.fname, Apellidos:Pac.lname,Phone:"50557533230",
-            Country:Pac.username, Gender:"M",Birth:moment("1990/01/01", "YYYY/MM/DD"),
-            AFPValues:["Nuez, Cerveza","Demencia, Otaku"],APPValues:["Amigdalitis"],
+            initialValues={{Nombres:Pac.nombres, Apellidos:Pac.apellidos,Phone:"505"+Pac.numCel,
+            Country:Pac.nacionalidad, Gender:Pac.sexo,Birth:moment("1990/01/01", "YYYY/MM/DD"),
+            AFPValues:["Nuez", "Cerveza"],APPValues:["Amigdalitis"],
             APNPValues:[{"Des":"Cocaina","C":2,"F":"D"}]}} 
             form={form} size='Default' style={{marginTop:"25px",maxWidth:"600px",width:"100%"}}>
 

@@ -56,56 +56,8 @@ export default function Citas(props){
         setLoadingList(true);
         GetByPagCitas(Age)
         .then((result)=>{
-            /*setList([
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-01-25 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-02-14 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-03-01 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-04-01 12:00","pendiente":false,"direccion":"Villa Fransisco"},
-            {"idCita":2,"habitacion":"Shiatsu","fechaHora":"2022-04-02 13:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":3,"habitacion":"Shiatsu","fechaHora":"2022-04-03 14:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":4,"habitacion":"Shiatsu","fechaHora":"2022-04-04 15:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":5,"habitacion":"Shiatsu","fechaHora":"2022-04-05 10:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-05-01 08:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":2,"habitacion":"Shiatsu","fechaHora":"2022-05-22 17:20","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":3,"habitacion":"Shiatsu","fechaHora":"2022-05-22 18:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":4,"habitacion":"Shiatsu","fechaHora":"2022-05-24 15:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":5,"habitacion":"Shiatsu","fechaHora":"2022-05-26 21:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":6,"habitacion":"Shiatsu","fechaHora":"2022-05-27 09:00","pendiente":true,"direccion":"Rafaela Herrera"},
-            {"idCita":7,"habitacion":"Shiatsu","fechaHora":"2022-05-27 10:00","pendiente":true,"direccion":"Rafaela Herrera"},
-            {"idCita":8,"habitacion":"Shiatsu","fechaHora":"2022-05-29 13:00","pendiente":true,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-06-01 12:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":2,"habitacion":"Shiatsu","fechaHora":"2022-06-02 01:00","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":3,"habitacion":"Shiatsu","fechaHora":"2022-06-03 09:35","pendiente":false,"direccion":"Rafaela Herrera"},
-            {"idCita":4,"habitacion":"-1","fechaHora":"2022-06-03 12:35","pendiente":true,"direccion":"De donde fue la robelo una cuadra arriba"},
-            {"idCita":5,"habitacion":"-1","fechaHora":"2022-06-03 19:35","pendiente":true,"direccion":"Donde era la pepsi una vara arriba"},
-            {"idCita":6,"habitacion":"-1","fechaHora":"2022-06-03 11:00","pendiente":false,"direccion":"Bo Laureano Mairena de la Iglesia Henron 2 cuadras arriba"},
-            {"idCita":7,"habitacion":"Shiatsu","fechaHora":"2022-06-05 11:00","pendiente":true,"direccion":"Rafaela Herrera"},
-            {"idCita":8,"habitacion":"Shiatsu","fechaHora":"2022-06-05 11:00","pendiente":true,"direccion":"Rafaela Herrera"},
-            {"idCita":9,"habitacion":"Shiatsu","fechaHora":"2022-06-07 16:00","pendiente":true,"direccion":"Rafaela Herrera"},
-            {"idCita":10,"habitacion":"Shiatsu","fechaHora":"2022-06-23 16:00","pendiente":true,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-07-12 12:00","pendiente":true,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-08-07 12:00","pendiente":true,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-09-20 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-10-05 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-11-29 12:00","pendiente":false,"direccion":"Rafaela Herrera"}],
-
-            [{"idCita":1,"habitacion":"Shiatsu","fechaHora":"2022-12-18 12:00","pendiente":false,"direccion":"Rafaela Herrera"}]]);*/
             setList(result);
         })
-    }
-
-    const onClickAddCita=()=>{
-        //setShowSheet(true);
     }
 
     const onNavigate = (date,mode) => {

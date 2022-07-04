@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -16,6 +17,7 @@ namespace api_nancurunaisa.Models
         public string? estadoCivil { get; set; }
         public string? direccion { get; set; }
 
+        [JsonIgnore]
         public virtual paciente idPacienteNavigation { get; set; } = null!;
         public virtual AFP AFP { get; set; } = null!;
         public virtual APNP APNP { get; set; } = null!;

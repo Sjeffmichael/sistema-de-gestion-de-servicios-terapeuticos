@@ -22,13 +22,27 @@ namespace api_nancurunaisa.Controllers
 
         // GET: api/Terapia
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<terapia>>> Getterapia()
+        public async Task<ActionResult<IEnumerable<terapia>>> Getterapia(int Page, int PerPage, string? nombreTerapia = "")
         {
           if (_context.terapia == null)
           {
               return NotFound();
           }
-            return await _context.terapia.ToListAsync();
+            var pageResult = (float)PerPage;
+            var pageCount = Math.Ceiling(_context.terapia.Where(t => t.nombreTerapia.Contains(nombreTerapia)).Count() / (float)PerPage);
+
+            var terapiasResults = await _context.terapia.Where(t => t.nombreTerapia.Contains(nombreTerapia))
+                  .Skip((Page - 1) * PerPage)
+                  .Take((int)pageResult)
+                  .ToListAsync();
+
+            var response = new TerapiaPaginationResponse
+            {
+                terapias = terapiasResults,
+                currentPage = Page,
+                pages = (int)pageCount
+            };
+            return Ok(response);
         }
 
         // GET: api/Terapia/5

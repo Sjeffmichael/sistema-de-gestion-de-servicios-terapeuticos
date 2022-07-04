@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api_nancurunaisa.Models
 {
@@ -21,6 +23,12 @@ namespace api_nancurunaisa.Models
         public string? direccion_domicilio { get; set; }
         public string? color { get; set; }
 
+        [NotMapped]
+        public string nombreSucursal { get; set; }
+
+        [NotMapped]
+        public string nombreHabitacion { get; set; }
+        //[JsonIgnore]
         public virtual habitacion? idHabitacionNavigation { get; set; }
         public virtual ICollection<factura> factura { get; set; }
         public virtual ICollection<pacienteCita> pacienteCita { get; set; }

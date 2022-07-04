@@ -22,13 +22,27 @@ namespace api_nancurunaisa.Controllers
 
         // GET: api/Sucursal
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<sucursal>>> Getsucursal()
+        public async Task<ActionResult<IEnumerable<sucursal>>> Getsucursal(int Page, int PerPage, string? nombreSucursal="")
         {
           if (_context.sucursal == null)
           {
               return NotFound();
           }
-            return await _context.sucursal.ToListAsync();
+            var pageResult = (float)PerPage;
+            var pageCount = Math.Ceiling(_context.sucursal.Where(t => t.nombreSucursal.Contains(nombreSucursal)).Count() / (float)PerPage);
+
+            var sucursalesResults = await _context.sucursal.Where(t => t.nombreSucursal.Contains(nombreSucursal))
+                  .Skip((Page - 1) * PerPage)
+                  .Take((int)pageResult)
+                  .ToListAsync();
+
+            var response = new SucursalPaginationResponse
+            {
+                sucursales = sucursalesResults,
+                currentPage = Page,
+                pages = (int)pageCount
+            };
+            return Ok(response);
         }
 
         // GET: api/Sucursal/5
@@ -114,6 +128,7 @@ namespace api_nancurunaisa.Controllers
 
             return NoContent();
         }
+
 
         private bool sucursalExists(int id)
         {

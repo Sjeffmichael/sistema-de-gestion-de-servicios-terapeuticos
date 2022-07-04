@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -23,6 +24,8 @@ namespace api_nancurunaisa.Models
         public DateTime fecha_nacimiento { get; set; }
 
         public virtual ICollection<amnanesis> amnanesis { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<pacienteCita> pacienteCita { get; set; }
     }
 }

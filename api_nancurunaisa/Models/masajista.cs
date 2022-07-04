@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,7 +30,7 @@ namespace api_nancurunaisa.Models
 
         [NotMapped]
         public IFormFile fotoPerfil { get; set; }
-
+        [JsonIgnore]
         public virtual sucursal? idSucursalNavigation { get; set; }
 
         public virtual ICollection<cita> idCita { get; set; }

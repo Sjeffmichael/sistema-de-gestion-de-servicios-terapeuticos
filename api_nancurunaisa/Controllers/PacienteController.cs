@@ -24,15 +24,27 @@ namespace api_nancurunaisa.Controllers
 
         // GET: api/Paciente
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<paciente>>> Getpaciente(int Page, int PerPage)
+        public async Task<ActionResult<IEnumerable<paciente>>> Getpaciente(int Page, int PerPage, string? nombrePaciente="")
         {
           if (_context.paciente == null)
           {
               return NotFound();
           }
             var pageResult = (float)PerPage;
-            var pageCount = Math.Ceiling(_context.masajista.Count() / (float)PerPage);
-            return await _context.paciente.ToListAsync();
+            var pageCount = Math.Ceiling(_context.paciente.Where(t => t.nombres.Contains(nombrePaciente)).Count() / (float)PerPage);
+
+            var pacientesResults = await _context.paciente.Where(t => t.nombres.Contains(nombrePaciente)).Include(x => x.amnanesis)
+                  .Skip((Page - 1) * PerPage)
+                  .Take((int)pageResult)
+                  .ToListAsync();
+
+            var response = new PacientePaginationResponse
+            {
+                pacientes = pacientesResults,
+                currentPage = Page,
+                pages = (int)pageCount
+            };
+            return Ok(response);
         }
 
         // GET: api/Paciente/5

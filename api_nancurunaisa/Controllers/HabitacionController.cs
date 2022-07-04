@@ -75,6 +75,20 @@ namespace api_nancurunaisa.Controllers
                 return BadRequest();
             }
 
+            //habitacion.idSucursalNavigation = await _context.sucursal.FindAsync(id);
+
+            //var sucursal = await _context.sucursal.FindAsync(id);
+            //if (sucursal == null)
+            //    return NotFound();
+
+            //var updateHabitacion = new habitacion
+            //{
+            //    idSucursal = id,
+            //    nombreHabitacion = request.nombreHabitacion,
+            //    idSucursalNavigation = sucursal,
+            //};
+
+
             _context.Entry(habitacion).State = EntityState.Modified;
 
             try
@@ -99,16 +113,23 @@ namespace api_nancurunaisa.Controllers
         // POST: api/Habitacion
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<habitacion>> Posthabitacion(habitacion habitacion)
+        public async Task<ActionResult<habitacion>> Posthabitacion(HabitacionDto request)
         {
-          if (_context.habitacion == null)
-          {
-              return Problem("Entity set 'nancurunaisadbContext.habitacion'  is null.");
-          }
-            _context.habitacion.Add(habitacion);
+            var sucursal = await _context.sucursal.FindAsync(request.idSucursal);
+            if (sucursal == null)
+                return NotFound();
+
+            var newHabitacion = new habitacion
+            {
+                idSucursal = request.idSucursal,
+                nombreHabitacion = request.nombreHabitacion,
+                idSucursalNavigation = sucursal,
+            };
+
+            _context.habitacion.Add(newHabitacion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Gethabitacion", new { id = habitacion.idHabitacion }, habitacion);
+            return CreatedAtAction("Gethabitacion", new { id = newHabitacion.idHabitacion }, newHabitacion);
         }
 
         // DELETE: api/Habitacion/5

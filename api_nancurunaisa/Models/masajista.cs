@@ -32,7 +32,7 @@ namespace api_nancurunaisa.Models
         public IFormFile fotoPerfil { get; set; }
         [JsonIgnore]
         public virtual sucursal? idSucursalNavigation { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<cita> idCita { get; set; }
         public virtual ICollection<dia> idDia { get; set; }
     }

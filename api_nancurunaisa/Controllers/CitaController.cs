@@ -30,7 +30,10 @@ namespace api_nancurunaisa.Controllers
               return NotFound();
           }
             //group the appointments by months of a specific year
-            var citas = (from c in await _context.cita.Where(c => c.fechaHora.Year == Convert.ToInt32(year)).ToListAsync()
+            var citas = (from c in await _context.cita
+                         
+                         .Where(c => c.fechaHora.Year == Convert.ToInt32(year)).ToListAsync()
+                         orderby c.fechaHora
                          group c by c.fechaHora.Month into nc
                          select nc).ToDictionary(p => p.Key, p => p.ToList());
 
@@ -48,36 +51,7 @@ namespace api_nancurunaisa.Controllers
             
         }
 
-        // GET: api/Cita
-        //[HttpGet]
-        //public async Task<ActionResult<List<cita>[]>> Getcita(string date, int type)
-        //{
-        //    if (_context.cita == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    //group the appointments by months of a specific year
-        //    var citas2 = (from c in await _context.cita
-        //                  .Where(
-        //                            c => ISOWeek.GetWeekOfYear(c.fechaHora) == ISOWeek.GetWeekOfYear(DateTime.Parse(date))
-        //                  ).ToListAsync()
-        //                  group c by c.idHabitacion. into nc
-        //                  select nc).ToDictionary(p => p.Key, p => p.ToList());
-
-
-        //    //Initialized an array of empty lists of appointments
-        //    List<cita>[] arr = new List<cita>[12].Select(item => new List<cita> { }).ToArray();
-
-
-        //    foreach (var c in citas2)
-        //    {
-        //        arr[c.Key - 1] = c.Value;
-        //    }
-
-        //    return arr;
-
-        //}
-
+        
         // GET: api/Cita/5
         [HttpGet("{id}")]
         public async Task<ActionResult<List<cita>>> Getcita(int id)
@@ -87,8 +61,11 @@ namespace api_nancurunaisa.Controllers
               return NotFound();
           }
             var cita = await _context.cita.Where(b => b.idCita == id)
+                .Include(m => m.idMasajista)
+                .Include(p => p.idPromocion)
+                .Include(t => t.idTerapia)
                 .Include(c => c.idHabitacionNavigation)
-                //.Include(d => d.idHabitacionNavigation.idSucursalNavigation.nombreSucursal)
+                .ThenInclude(d => d.idSucursalNavigation)
                 .ToListAsync();
 
             //var cita = from c in await _context.cita.Where(c => c.idCita == id).ToListAsync()
@@ -144,17 +121,72 @@ namespace api_nancurunaisa.Controllers
 
         // POST: api/Cita
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<cita>> Postcita(cita cita)
+        //{
+        //  if (_context.cita == null)
+        //  {
+        //      return Problem("Entity set 'nancurunaisadbContext.cita'  is null.");
+        //  }
+        //    _context.cita.Add(cita);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("Getcita", new { id = cita.idCita }, cita);
+        //}
+
         [HttpPost]
-        public async Task<ActionResult<cita>> Postcita(cita cita)
+        public async Task<ActionResult<cita>> Postcita(CitaDto cita)
         {
-          if (_context.cita == null)
-          {
-              return Problem("Entity set 'nancurunaisadbContext.cita'  is null.");
-          }
-            _context.cita.Add(cita);
+            var masajistas = new List<masajista>();
+            var promociones = new List<promocion>();
+            var terapias = new List<terapia>();
+
+            foreach (var m in cita.idMasajista)
+            {
+                var masajista = await _context.masajista.FindAsync(m);
+                if (masajista == null)
+                    return NotFound();
+
+                masajistas.Add(masajista);
+            }
+
+            foreach (var p in cita.idPromocion)
+            {
+                var promocion = await _context.promocion.FindAsync(p);
+                if (promocion == null)
+                    return NotFound();
+
+                promociones.Add(promocion);
+            }
+
+            foreach (var t in cita.idTerapia)
+            {
+                var terapia = await _context.terapia.FindAsync(t);
+                if (terapia == null)
+                    return NotFound();
+
+                terapias.Add(terapia);
+            }
+
+            var newCita = new cita
+            {
+                idHabitacion = cita.idHabitacion,
+                fechaHora = cita.fechaHora,
+                direccion_domicilio = cita.direccion_domicilio,
+                color = cita.color,
+                idMasajista = masajistas,
+                idPromocion = promociones,
+                idTerapia = terapias
+            };
+
+            if (_context.cita == null)
+            {
+                return Problem("Entity set 'nancurunaisadbContext.cita'  is null.");
+            }
+            _context.cita.Add(newCita);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getcita", new { id = cita.idCita }, cita);
+            return CreatedAtAction("Getcita", new { id = newCita.idCita }, newCita);
         }
 
         // DELETE: api/Cita/5
@@ -180,20 +212,26 @@ namespace api_nancurunaisa.Controllers
         //[HttpGet("{id}")]
         //public async Task<ActionResult<cita>> Getcita(int idMasajista, string fecha)
         //{
-        //    //if (_context.cita == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
+        //    if (_context.cita == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        //    //var cita = await _context.cita.FindAsync(idMasajista);
+        //    var cita = (from c in await _context.cita.Include(x => x.idMasajista.Where(y => y.idMasajista == idMasajista)).ToListAsync()
+        //                group c by c.fechaHora.Month into nc
+        //                select nc).ToDictionary(p => p.Key, p => p.ToList());
 
-        //    //if (cita == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
+        //    if (cita == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        //    //return cita;
+        //    return cita;
         //}
+
+        // GET: api/Cita
+        
+
 
         private bool citaExists(int id)
         {

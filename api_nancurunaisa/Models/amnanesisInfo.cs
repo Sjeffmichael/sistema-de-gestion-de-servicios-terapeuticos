@@ -13,7 +13,7 @@ namespace api_nancurunaisa.Models
         public string? diagnosticoProblema { get; set; }
         public DateTime? proxCita { get; set; }
 
-        public virtual pacienteCita id { get; set; } = null!;
-        public virtual signosVitales signosVitales { get; set; } = null!;
+        public virtual pacienteCita id { get; set; }
+        public virtual signosVitales signosVitales { get; set; }
     }
 }

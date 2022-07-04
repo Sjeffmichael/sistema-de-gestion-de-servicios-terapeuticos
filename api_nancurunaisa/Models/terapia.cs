@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -15,7 +16,7 @@ namespace api_nancurunaisa.Models
         public int duracion { get; set; }
         public double precioDomicilio { get; set; }
         public double precioLocal { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<cita> idCita { get; set; }
     }
 }

@@ -53,7 +53,7 @@ namespace api_nancurunaisa.Controllers
           {
               return NotFound();
           }
-            var sucursal = await _context.sucursal.FindAsync(id);
+            var sucursal = await _context.sucursal.Include(h => h.habitacion).FirstOrDefaultAsync(s => s.idSucursal == id);
 
             if (sucursal == null)
             {

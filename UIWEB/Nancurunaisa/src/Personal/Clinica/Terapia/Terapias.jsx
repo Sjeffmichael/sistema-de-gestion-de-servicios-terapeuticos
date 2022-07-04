@@ -89,7 +89,6 @@ export default function Terapias(props){
         }
     }
 
-
     const onLongPress = (id,name,selected,index) => {
         if(isPicker){
             props.onFinish(Teras[index]);

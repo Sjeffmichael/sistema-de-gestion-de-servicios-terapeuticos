@@ -20,6 +20,8 @@ export default function Pacientes(props){
     const perPageDefault = 5;
     const [totalItems,setTotalItems] = useState(0);
     const [LoadingList,setLoadingList] = useState(true);
+    const [search,setSearch] = useState("");
+    const [page,setPage] = useState(1);
 
     const isPicker = props.picker==true? true:false
     const isMulti = props.multi==true? true:false
@@ -29,7 +31,7 @@ export default function Pacientes(props){
 
     const [selectionMode,setSelectionMode] = useState(isMulti?true:false);//is selection mode
     useEffect(() => {
-        getPacS(1)
+        getPacS(page,search)
       }, [])
 
     const setList = (result) =>{
@@ -37,31 +39,28 @@ export default function Pacientes(props){
         setLoadingList(false);
     }
 
-    const getPacS=(Page)=>{
-        GetByPagPacS(Page,perPageDefault)
+    const getPacS=(Page,search)=>{
+        setLoadingList(true);
+        GetByPagPacS(Page,perPageDefault,search)
         .then((result)=>{
-            setTotalItems(result.total);
+            setTotalItems(result.pages*perPageDefault);
             const data = [];
-            result.data.map((item)=>{
-                data.push(new Paciente(item.id,item.fname,item.lname,"F",12,"","","","","",MultiData.find((sel)=>{return sel.idPaciente==item.id})? true:false));
+            result.pacientes.map((item)=>{
+                data.push(new Paciente(item.idPaciente,item.nombres,item.apellidos,"F",12,"","","","","",MultiData.find((sel)=>{return sel.idPaciente==item.id})? true:false));
             });
             setList(data);})
     }
 
-    const PacSSearch =(bus)=>{
-        setLoadingList(true);
-        SearchPacS(bus)
-        .then((result)=>{
-            setList(result);
-          }
-        )
+    const onSearch = (value) =>{
+        setSearch(value);
+        setPage(1);
+        getPacS(1,value);
     }
 
-    const changePage=(Page)=>{
-        setLoadingList(true)
-        getPacS(Page);
+    const onChangePage = (page) =>{
+        setPage(page);
+        getPacS(page,search);
     }
-
     const setSelectedPac =(index,sel)=>{
         let newArr = [...PacS]; // copying the old datas array
         newArr[index].selected = sel; //key and value
@@ -160,8 +159,8 @@ export default function Pacientes(props){
         <button className='BottomRoundButton' onClick={()=>{onClickAddPacs()}} style={{display:isPicker||isMulti?"none":""}}><PlusOutlined/></button>
         <button className='BottomRoundButton' onClick={()=>{props.onFinish(MultiData)}} style={{display:selectionMode && isMulti?"":"none"}}><CheckOutlined/></button>
         <Layout className='ContentLayout'>
-            <Searchbar onSearch={(value)=>{PacSSearch(value)}} loading={LoadingList}/>
-            <Pagination onChange={(page)=>{changePage(page)}} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"10px"}}/>
+            <Searchbar search={search} onSearch={(value)=>{onSearch(value)}} loading={LoadingList}/>
+            <Pagination onChange={(page)=>{onChangePage(page)}} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"10px"}}/>
             <List style={{marginTop:"10px"}} loading={LoadingList} grid={grid}
             dataSource={PacS} renderItem={(pacS,index) => (
                 <ItemView id={pacS.idPaciente} avatar={""} onClick={(id,name,selected)=>{onclick(id,name,selected,index)}}

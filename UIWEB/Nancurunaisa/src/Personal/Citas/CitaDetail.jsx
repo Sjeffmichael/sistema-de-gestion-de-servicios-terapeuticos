@@ -21,7 +21,7 @@ import { AllowFunction, DenyFunction, Ranges } from "../../Utils/RangeProviders"
 import Sucursales from "../Clinica/Sucursal/Sucursales";
 import Cubiculos from "../Clinica/Sucursal/Cubiculos";
 import FacturaDet from "../Clinica/Facturas/Factura";
-import { GetByIdCita } from "../../Utils/FetchingInfo";
+import { AddPacsCita, CreateCita, GetByIdCita } from "../../Utils/FetchingInfo";
 
 function getaction(url){
     const action = url.split("/");
@@ -36,7 +36,7 @@ export default function CitaDetail(){
     const [isLoading,setloading]= useState(false);/*For Add teratas */
     
     const [showSheet,setShowSheet] = useState(false);//showBottomSheetLayout
-    const [Picker,setPicker] = useState(0);;//0:Pacientes, 1:Terapias, 2:Terapeutas
+    const [Picker,setPicker] = useState("0");;//0:Pacientes, 1:Terapias, 2:Terapeutas
 
     const [gettingCita, setGettingCita] = useState(idCita==null? false:true);//is fetching specific cita
 
@@ -45,7 +45,7 @@ export default function CitaDetail(){
     const [time, setTime] = useState(moment().format('HH:mm'));//time of cita
     const [hasFactura,setHasFactura] = useState(false);//has factura
 
-    const [SucDom, setSucDom] = useState(0);//is sucursal or domicilio
+    const [SucDom, setSucDom] = useState("0");//is sucursal or domicilio
 
     const [Pacs, setPacs] = useState([]);//Pacientes
     const [Teras, setTeras] = useState([]);//Terapias
@@ -63,38 +63,41 @@ export default function CitaDetail(){
 
     const CitaGet = (id) =>{
         setGettingCita(true);
-        GetByIdCita(id).then(res => {
-            setHasFactura(res.pendiente?false:true);
+        GetByIdCita(id).then((res) => {
+            setHasFactura(res[0].pendiente?false:true);
+
+            setDate(moment(res[0].fechaHora).format('YYYY-MM-DD'));
+            setTime(moment(res[0].fechaHora).format('HH:mm'));
             
             let data = []
-
-            res.pacienteCita.map((item)=>{
+            res[0].pacienteCita.map((item)=>{
                 data.push(new Paciente(item.idPaciente,item.nombres,item.apellidos,"F",12,"","","","","",false));
             });
             setPacs(data);
+
+            setPromos(res[0].idPromocion);
             data=[];
 
-            res.idPromocion.map((item)=>{
-                data.push(new Promocion(item.idPromocion,item.nombrePromocion,item.descripcion,false));
-            });
-            setPromos(data);
-            data=[];
-
-            res.idTerapia.map((item)=>{
+            res[0].idTerapia.map((item)=>{
                 data.push(new Terapia(item.idTerapia,item.nombreTerapia,"","","",false));
             });
             setTeras(data);
             data=[];
 
-            res.idMasajista.map((item)=>{
+            res[0].idMasajista.map((item)=>{
                 data.push(new Terapeuta(item.idMasajista,item.nombres,item.apellidos,"","","","","","","",false));
             });
             setTeraTas(data);
 
-            setSucur(new Sucursal(0,"Rafaela Herrero","",false))
-            setCub(new Habitacion(0,0,"Shiatsu",false));
-            setDate(moment(res.fechaHora).format('YYYY-MM-DD'));
-            setTime(moment(res.fechaHora).format('HH:mm'));
+            const isDomc = res[0].idHabitacion==null?true:false;
+            setSucDom(isDomc==true?"1":"0");
+
+            if(isDomc){
+                setDireccion(res[0].direccion_domicilio);
+            }else{
+                setSucur(new Sucursal(0,res[0].idHabitacionNavigation.idSucursalNavigation.nombreSucursal,"",false))
+                setCub(new Habitacion(0,0,res[0].idHabitacionNavigation.nombreHabitacion,false));
+            }
 
             setGettingCita(false);
         }).catch(err => {
@@ -124,6 +127,8 @@ export default function CitaDetail(){
             case 5: return <Cubiculos idSuc={Sucur.idSucursal} picker={true} onBack={()=>{setShowSheet(false)}} onFinish={(value)=>{setCub(value);setShowSheet(false)}}/>
 
             case 6: return <FacturaDet action={FormActions.Add} idCita={0} onBack={()=>{setShowSheet(false)}}/>
+
+            case 7: return <FacturaDet action={FormActions.Update} idFactura={1} onBack={()=>{setShowSheet(false)}}/>
             default:
                 return <div> MAMA? </div>
         }
@@ -145,15 +150,49 @@ export default function CitaDetail(){
         }else if(Direccion.length <= 5){
             message.error("Debe ingresar una direccion válida",2);return;
         }
-
-        message.success("Cita agregada",2);
+        setloading(true);
+        if (ActionsProvider.isAdd) {
+            let data = {
+                idHabitacion:SucDom==0?null:Cub.idHabitacion,
+                fechaHora: moment(`${date} ${time}`).format('YYYY-MM-DD HH:mm:ss'),
+                direccion_domicilio:SucDom==0? null:Direccion,
+                color:"#000000",
+                idMasajista:TeraTas.map((item)=>{return item.idMasajista}),
+                idTerapia:Teras.map((item)=>{return item.idTerapia}),
+                idPromocion:PromoS.map((item)=>{return item.idPromocion})
+            }
+            CreateCita(data).then((res) => {
+                Pacs.map((item)=>{
+                    let data2 = {
+                        idCita:res.idCita,
+                        idPaciente:item.idPaciente,
+                        idCitaNavigation: null,
+                        idPacienteNavigation: null,
+                        amnanesisInfo: null
+                    }
+                    AddPacsCita(data2).then((res) => {
+                      message.success("Paciente añadido correctamente",2);
+                        setloading(false); 
+                    }).catch(err => {
+                        message.error("Error al añadir Pacientes",2);
+                        setloading(false); 
+                    });
+                });
+                
+            }).catch(err => {
+                message.error("Error al crear la cita",2);
+                setloading(false);
+            });
+        }else{
+            
+        }
     }
 
     const userMenu = (
         <Menu style={{width:"200px",padding:"0px"}}>
             <Menu.Item key="0" onClick={()=>{setPicker(6);setShowSheet(true)}} 
             style={{display:DenyFunction([Ranges.Manager]) && !hasFactura?"":"none"}}>Facturar</Menu.Item>
-            <Menu.Item key="1" onClick={()=>{}} 
+            <Menu.Item key="1" onClick={()=>{setPicker(7);setShowSheet(true)}}
             style={{display:DenyFunction([Ranges.Manager]) && hasFactura?"":"none"}}>Ver Factura</Menu.Item>
             <Menu.Item key="2" style={{display:DenyFunction([Ranges.Manager])?"":"none"}}>
             <Button  onClick={()=>{}} 
@@ -172,7 +211,7 @@ export default function CitaDetail(){
     
     <Layout className='ContentLayout'>
     <Skeleton style={{display:gettingCita?"":"none"}} loading active/>
-    <div style={{width:"100%",maxWidth:"600px",paddingTop:"15px",
+    <div style={{width:"100%",maxWidth:"800px",paddingTop:"15px",
     display:gettingCita?"none":"flex",flexDirection:"column",paddingLeft:"10px",paddingRight:"10px",paddingBottom:"10px",
     borderRadius:"25px",textAlign:"center",backgroundColor:"#212121",boxShadow:"0 5px 15px rgba(14,21,37,0.8)"}}>
         <input style={{width:"100%",backgroundColor:"#212121",color:"white",borderWidth:"0",fontSize:"50px"}}
@@ -180,7 +219,7 @@ export default function CitaDetail(){
         <input style={{width:"100%",backgroundColor:"#212121",color:"white",borderWidth:"0",fontSize:"25px"}}
         type="date" value={date} onChange={(e)=>{setDate(e.target.value?e.target.value:today)}}/>
     </div>
-    <div style={{marginTop:"20px",width:"100%",display:gettingCita?"none":""}}>
+    <div style={{marginTop:"20px",width:"100%",maxWidth:"800px",display:gettingCita?"none":""}}>
         <Collapse accordion>
             <Collapse.Panel header="Pacientes" key="1">
                 <List style={{backgroundColor:"whiteSmoke",paddingTop:"10px",paddingBottom:"10px"}}
@@ -224,7 +263,7 @@ export default function CitaDetail(){
             </Collapse.Panel>
         </Collapse>
 
-        <Tabs defaultActiveKey="0" onChange={(activeKey)=>{setSucDom(activeKey)}}>
+        <Tabs activeKey={SucDom} onChange={(activeKey)=>{setSucDom(activeKey)}}>
             <Tabs.TabPane tab={<span><EnvironmentFilled/> Sucursal </span>} key="0"><Space>
                 <MiniPicker visible={true} title={Sucur.nombreSucursal} icon={<EnvironmentFilled style={{fontSize:"50px",color:"white"}}/>} 
                 button="Cambiar Sucursal" onClick={()=>{setPicker(4);setShowSheet(true)}}/>

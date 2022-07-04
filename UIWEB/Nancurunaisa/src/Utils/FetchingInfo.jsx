@@ -14,11 +14,22 @@ export async function loginUser(credentials) {
   return result;
 };
 
+/*Reportes*/
+export async function getReportSucursales(date,type){
+  const res = await fetch(url+"Informe?date="+date+"&type="+type);
+  const result = await res.json();
+  return result;
+}
+
 /*Pagination All Methods */
-export async function GetByPagTeraTa(Page,perPage){
-    const res = await fetch(url+"Masajista/?Page="+Page+"&PerPage="+perPage);
-    const result = await res.json();
-    return result;
+export async function GetByPagTeraTa(Page,perPage,search){
+  let urlCompleta = url+"Masajista/?Page="+Page+"&PerPage="+perPage;
+  if (search != undefined && search != ""){
+    urlCompleta += "&nombreMasajista="+search;
+  }
+  const res = await fetch(urlCompleta);
+  const result = await res.json();
+  return result;
 }
 
 export async function GetByPagSucur(Page,perPage,search){
@@ -31,8 +42,12 @@ export async function GetByPagSucur(Page,perPage,search){
   return result;
 }
 
-export async function GetByPagPacS(Page,perPage){
-  const res = await fetch("https://www.mecallapi.com/api/users?page=" + Page + "&per_page=" + perPage);
+export async function GetByPagPacS(Page,perPage,search){
+  let urlCompleta = url+"Paciente/?Page="+Page+"&PerPage="+perPage;
+  if (search != undefined && search != ""){
+    urlCompleta += "&nombrePaciente="+search;
+  }
+  const res = await fetch(urlCompleta);
   const result = await res.json();
   return result;
 }
@@ -54,18 +69,18 @@ export async function GetByPagCitas(Age){
 }
 
 export async function GetByPagCubic(idSucursal,Page,perPage){
-  const res = await fetch(url+"Cubiculo?idSucursal="+idSucursal+"&Page="+Page+"&PerPage="+perPage);
+  const res = await fetch(url+"Habitacion?idSucursal="+idSucursal+"&Page="+Page+"&PerPage="+perPage);
   const result = await res.json();
   return result;
 }
 
-export async function GetbyPagPromos(Page,perPage){
-  /*const res = await fetch("https://www.mecallapi.com/api/users?page=" + Page + "&per_page=" + perPage);
-  const result = await res.json();*/
-  const result = [{idPromocion:0,nombrePromocion:"Promocion 1",descripcion:"Promocion1"},
-  {idPromocion:1,nombrePromocion:"Promocion 2",descripcion:"Promocion2"},
-  {idPromocion:2,nombrePromocion:"Promocion 3",descripcion:"Promocion3"},
-  {idPromocion:3,nombrePromocion:"Promocion 4",descripcion:"Promocion4"}]
+export async function GetbyPagPromos(Page,perPage,search){
+  let urlCompleta = url+"Promocion/?Page="+Page+"&PerPage="+perPage;
+  if (search != undefined && search != ""){
+    urlCompleta += "&nombrePromocion="+search;
+  }
+  const res = await fetch(urlCompleta);
+  const result = await res.json();
   return result;
 }
 
@@ -78,13 +93,13 @@ export async function GetByIdTeraTa(id){
 }
 
 export async function GetByIdPac(id){
-  const res = await fetch("https://www.mecallapi.com/api/users/"+id);
+  const res = await fetch(url+"Paciente/"+id);
   const result = await res.json();
   return result;
 }
 
 export async function GetByIdSucur(id){
-  const res = await fetch(" https://www.mecallapi.com/api/attractions/"+id);
+  const res = await fetch(url+"Sucursal/"+id);
   const result = await res.json();
   return result;
 }
@@ -102,7 +117,7 @@ export async function GetByIdCita(id){
 }
 
 export async function GetByIdPromo(id){
-  const res = await fetch(" https://www.mecallapi.com/api/promotions/"+id);
+  const res = await fetch(url+"Promocion/"+id);
   const result = await res.json();
   return result;
 }
@@ -160,12 +175,35 @@ export async function CreateTeraTa(data){
 }
 
 export async function CreateSucur(data){
-  const res = await fetch('https://www.mecallapi.com/api/auth/attractions/create', {
+  const res = await fetch(url+"Sucursal", {
      method: 'POST',
      headers: {
        Accept: 'application/form-data',
        'Content-Type': 'application/json',
-       Authorization: "Bearer "+localStorage.getItem('accessToken')
+     },body: JSON.stringify(data),
+   })
+   const result = await res.json();
+   return result;
+}
+
+export async function CreatePromo(data){
+  const res = await fetch(url+"Promocion", {
+     method: 'POST',
+     headers: {
+       Accept: 'application/form-data',
+       'Content-Type': 'application/json',
+     },body: JSON.stringify(data),
+   })
+   const result = await res.json();
+   return result;
+}
+
+export async function CreateHab(data){
+  const res = await fetch(url+"Habitacion", {
+     method: 'POST',
+     headers: {
+       Accept: 'application/form-data',
+       'Content-Type': 'application/json',
      },body: JSON.stringify(data),
    })
    const result = await res.json();
@@ -186,6 +224,42 @@ export async function CreatePac(data){
 
 export async function CreateTera(data){
   const res = await fetch(url+"Terapia", {
+     method: 'POST',
+     headers: {
+       Accept: 'application/form-data',
+       'Content-Type': 'application/json',
+     },body: JSON.stringify(data),
+   })
+   const result = await res.json();
+   return result;
+}
+
+export async function CreateFact(data){
+  const res = await fetch(url+"Factura", {
+     method: 'POST',
+     headers: {
+       Accept: 'application/form-data',
+       'Content-Type': 'application/json',
+     },body: JSON.stringify(data),
+   })
+   const result = await res.json();
+   return result;
+}
+
+export async function CreateCita(data){
+  const res = await fetch(url+"Cita", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/form-data',
+        'Content-Type': 'application/json',
+      },body: JSON.stringify(data),
+    })
+    const result = await res.json();
+    return result;
+}
+
+export async function AddPacsCita(data){
+  const res = await fetch(url+"PacienteCita", {
      method: 'POST',
      headers: {
        Accept: 'application/form-data',
@@ -234,6 +308,29 @@ export async function UpdatePac(data){
      return result;
 }
 
+export async function UpdateHab(id,data){
+  const res = await fetch(url+"Habitacion/"+id,{
+    method:"PUT",
+    headers: {
+      Accept: 'application/form-data',
+      'Content-Type': 'application/json',
+    },body: JSON.stringify(data)
+  })
+  const result = await res.json();
+     return result;
+}
+
+export async function UpdatePromo(id,data){
+  const res = await fetch(url+"Promocion/"+id,{
+    method:"PUT",
+    headers: {
+      Accept: 'application/form-data',
+      'Content-Type': 'application/json',
+    },body: JSON.stringify(data)
+  })
+  return res;
+}
+
 export async function UpdateTera(data,id){
   const res = await fetch(url+"Terapia/"+id,{
     method:"PUT",
@@ -243,8 +340,6 @@ export async function UpdateTera(data,id){
     },body: JSON.stringify(data),
   })
   return res;
-  /*const result = await res.json();
-  return result;*/
 }//Authorization: "Bearer "+localStorage.getItem('accessToken')
 
 /*Deleting */

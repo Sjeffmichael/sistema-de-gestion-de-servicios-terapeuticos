@@ -32,22 +32,16 @@ export default function Cubiculos(props){
     }
 
     const getCubs=(Page)=>{
-        /*GetByPagCubic(props.idSuc,Page,perPageDefault)
+        setLoadingList(true);
+        GetByPagCubic(props.idSuc,Page,perPageDefault)
         .then((result)=>{
-            setTotalItems(result.total);
+            setTotalItems(result.pages*perPageDefault);
             const data = [];
-            result.data.map((item)=>{
-                data.push(new Sucursal(item.id,item.name,"",MultiData.find((sel)=>{return sel.idSucursal==item.id})? true:false));
+            result.habitaciones.map((item)=>{
+                data.push(new Habitacion(item.idHabitacion,item.idSucursal,item.nombreHabitacion,MultiData.find((sel)=>{return sel.idSucursal==item.id})? true:false,""));
             });
-            setList(data);})*/
-
-        const Cubiculo = [{idHabitacion:0,nombreHabitacion:"Relajante"},{idHabitacion:1,nombreHabitacion:"Shiatsu"},{idHabitacion:2,nombreHabitacion:"Refelctor"}]
-        const data = [];
-        Cubiculo.map((item)=>{
-            data.push(new Habitacion(item.idHabitacion,0,item.nombreHabitacion,MultiData.find((sel)=>{return sel.idHabitacion==item.idHabitacion})? true:false));
-        });
-        setList(data);
-        setTotalItems(Cubiculo.length);
+            setList(data);
+        })
     }
 
     const setSelectedItem =(index,sel)=>{
@@ -150,7 +144,6 @@ export default function Cubiculos(props){
         </PageHeader>
         <button className='BottomRoundButton' onClick={()=>{props.onFinish(MultiData)}} style={{display:selectionMode && isMulti?"":"none"}}><CheckOutlined/></button>
         <Layout className='ContentLayout'>
-            <Searchbar onSearch={(value)=>{CubiSearch(value)}} loading={LoadingList}/>
             <Pagination onChange={(page)=>changePage(page)} defaultPageSize={perPageDefault} total={totalItems} style={{marginTop:"20px"}}/>
             <List style={{marginTop:"40px"}} loading={LoadingList} grid={grid}
             dataSource={Cubi} renderItem={(cubi,index) => (

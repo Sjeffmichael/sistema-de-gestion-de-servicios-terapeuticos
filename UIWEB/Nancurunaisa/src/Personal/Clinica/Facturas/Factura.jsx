@@ -4,6 +4,7 @@ import React, {useState,useEffect} from 'react';
 import { Factura } from "../../../Models/Models";
 import { Button, Divider, Form, Input, InputNumber, Layout, Menu, message, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+import { CreateFact } from "../../../Utils/FetchingInfo";
 const { Title } = Typography;
 
 export default function FacturaDet (props) {
@@ -40,12 +41,21 @@ export default function FacturaDet (props) {
     const onFinish = () => {
         setloading(true);
         if (ActionsProvider.isAdd) {
-            if (true) {
+            let data = {
+                idCita: idCita,
+                descuento: form.getFieldValue("Des"),
+                subTotal: form.getFieldValue("Sub"),
+                total: form.getFieldValue("Total")
+            }
+            CreateFact(data).then(res => {
                 message.success("Facturado",1).then(()=>{
                 setloading(false);
                 Navigate("/Personal/Citas",{replace:true});
                 })
-            }else{message.error("No se pudo Facturar",2);setloading(false)}
+            }).catch(err => {
+                message.error("Error al facturar",1);
+                setloading(false);
+            });
         }else{
             if (true){
                 message.success("Factura Modificada",1).then(()=>{
@@ -84,12 +94,12 @@ export default function FacturaDet (props) {
                     </Form.Item>
                     <Divider/>
                     <Form.Item name="Des" label="Descuento:">
-                        <InputNumber style={{width:"100%"}} type="number" maxLength={6} placeholder='Subtotal'/>
+                        <InputNumber style={{width:"100%"}} type="number" maxLength={6} placeholder='Descuento'/>
                     </Form.Item>
                     <Divider/>
                     <Form.Item name="Total" label="Total:" rules={[{
                         required:true,message:"¡Ingrese el Total!"}]}>
-                        <InputNumber style={{width:"100%"}} type="number" maxLength={6} placeholder='Subtotal'/>
+                        <InputNumber style={{width:"100%"}} type="number" maxLength={6} placeholder='Total'/>
                     </Form.Item>
                 </div>
                 <ButtonSubmit ActionProv={ActionsProvider} isLoading={isLoading}/>

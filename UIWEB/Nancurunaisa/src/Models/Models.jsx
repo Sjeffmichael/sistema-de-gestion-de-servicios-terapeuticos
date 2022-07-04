@@ -68,16 +68,13 @@ export class Sucursal{
 }
 
 export class Habitacion{
-    constructor(idHabitacion,idSucursal,nombreHabitacion,selected){
+    constructor(idHabitacion,idSucursal,nombreHabitacion,selected,cita){
         this.idHabitacion = idHabitacion;
         this.idSucursal = idSucursal;
         this.nombreHabitacion = nombreHabitacion;
         this.selected = selected;
+        this.cita = cita?cita:null;
     }
-}
-
-export class Cita{
-    
 }
 
 export class Factura{

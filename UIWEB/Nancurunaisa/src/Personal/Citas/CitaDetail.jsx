@@ -55,6 +55,8 @@ export default function CitaDetail(){
     const [Cub,setCub] = useState([]);//Cubiculo
     const [Direccion,setDireccion] = useState([]);//Direccion
 
+    const [idFact,setFact] = useState(0);
+
     const grid = { gutter: 16, xs: 1, sm: 1, md: 2,lg: 2,xl: 3,xxl: 3 }
 
     if (!ActionsProvider.isAdd) {
@@ -64,14 +66,16 @@ export default function CitaDetail(){
     const CitaGet = (id) =>{
         setGettingCita(true);
         GetByIdCita(id).then((res) => {
-            setHasFactura(res[0].pendiente?false:true);
-
+            setHasFactura(res[0].factura[0]!=null?true:false);
+            if(res[0].factura[0]!=null){
+                setFact(res[0].factura[0].idFactura)
+            }
             setDate(moment(res[0].fechaHora).format('YYYY-MM-DD'));
             setTime(moment(res[0].fechaHora).format('HH:mm'));
             
             let data = []
             res[0].pacienteCita.map((item)=>{
-                data.push(new Paciente(item.idPaciente,item.nombres,item.apellidos,"F",12,"","","","","",false));
+                data.push(new Paciente(item.idPacienteNavigation.idPaciente,item.idPacienteNavigation.nombres,item.idPacienteNavigation.apellidos,"F",12,"","","","","",false));
             });
             setPacs(data);
 
@@ -126,9 +130,9 @@ export default function CitaDetail(){
 
             case 5: return <Cubiculos idSuc={Sucur.idSucursal} picker={true} onBack={()=>{setShowSheet(false)}} onFinish={(value)=>{setCub(value);setShowSheet(false)}}/>
 
-            case 6: return <FacturaDet action={FormActions.Add} idCita={0} onBack={()=>{setShowSheet(false)}}/>
+            case 6: return <FacturaDet action={FormActions.Add} idCita={idCita} onBack={()=>{setShowSheet(false)}}/>
 
-            case 7: return <FacturaDet action={FormActions.Update} idFactura={1} onBack={()=>{setShowSheet(false)}}/>
+            case 7: return <FacturaDet action={FormActions.Update} idFactura={idFact} onBack={()=>{setShowSheet(false)}}/>
             default:
                 return <div> MAMA? </div>
         }

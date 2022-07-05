@@ -116,6 +116,12 @@ export async function GetByIdCita(id){
   return result;
 }
 
+export async function GetByIdFact(id){
+  const res = await fetch(url+"Factura/"+id);
+  const result = await res.json();
+  return result;
+}
+
 export async function GetByIdPromo(id){
   const res = await fetch(url+"Promocion/"+id);
   const result = await res.json();

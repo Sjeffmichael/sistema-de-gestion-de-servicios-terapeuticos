@@ -12,6 +12,6 @@ namespace api_nancurunaisa.Models
         public double subTotal { get; set; }
         public double total { get; set; }
         [JsonIgnore]
-        public virtual cita idCitaNavigation { get; set; } = null!;
+        public virtual cita? idCitaNavigation { get; set; } = null!;
     }
 }

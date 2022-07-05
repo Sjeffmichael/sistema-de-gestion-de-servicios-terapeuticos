@@ -1,9 +1,8 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export function getMyRange() {
-    /*const user = JSON.parse(localStorage.getItem('user'));
-    return user.Roll;*/
-    return Ranges.Owner;
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user.Roll;
 }
 
 function includes(array){

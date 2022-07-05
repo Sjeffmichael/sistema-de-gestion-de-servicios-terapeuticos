@@ -10,7 +10,7 @@ namespace api_nancurunaisa.Models
     {
         public int idCita { get; set; }
         public int idPaciente { get; set; }
-
+        [JsonIgnore]
         public virtual cita? idCitaNavigation { get; set; }
         public virtual paciente? idPacienteNavigation { get; set; }
 

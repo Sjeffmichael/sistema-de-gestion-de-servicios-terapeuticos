@@ -63,7 +63,10 @@ namespace api_nancurunaisa.Controllers
             var cita = await _context.cita.Where(b => b.idCita == id)
                 .Include(m => m.idMasajista)
                 .Include(p => p.idPromocion)
+                .Include(f => f.factura)
                 .Include(t => t.idTerapia)
+                .Include(s => s.pacienteCita)
+                .ThenInclude(u => u.idPacienteNavigation)
                 .Include(c => c.idHabitacionNavigation)
                 .ThenInclude(d => d.idSucursalNavigation)
                 .ToListAsync();

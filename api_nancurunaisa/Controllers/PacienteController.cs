@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using api_nancurunaisa.Models;
 
@@ -140,9 +141,9 @@ namespace api_nancurunaisa.Controllers
         [NonAction]
         public async Task<string> SaveImage(IFormFile fotoPerfil)
         {
-            string nombreFoto = new String(Path.GetFileNameWithoutExtension(fotoPerfil.Name).Take(10).ToArray()).Replace(' ', '-');
-            nombreFoto = nombreFoto + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(fotoPerfil.FileName);
-            var rutaFoto = Path.Combine(_hostEnvironment.ContentRootPath, "Images", nombreFoto);
+            string nombreFoto = new String(System.IO.Path.GetFileNameWithoutExtension(fotoPerfil.Name).Take(10).ToArray()).Replace(' ', '-');
+            nombreFoto = nombreFoto + DateTime.Now.ToString("yymmssfff") + System.IO.Path.GetExtension(fotoPerfil.FileName);
+            var rutaFoto = System.IO.Path.Combine(_hostEnvironment.ContentRootPath, "Images", nombreFoto);
 
             using (var fileStream = new FileStream(rutaFoto, FileMode.Create))
             {

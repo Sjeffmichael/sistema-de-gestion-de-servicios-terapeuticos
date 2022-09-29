@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
+using api_nancurunaisa.Data;
+using api_nancurunaisa.Resolvers.Queries;
+using api_nancurunaisa.Resolvers.Mutations;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -48,6 +51,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services
+    .AddGraphQLServer()
+    .AddFiltering()
+    .AddQueryType(d => d.Name("Query"))
+        .AddType<TerapeutaQueryResolver>()
+            .AddProjections()
+            .AddFiltering()
+            .AddSorting()
+    .AddMutationType(d => d.Name("Mutation"))
+        .AddType<Login>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,14 +79,15 @@ app.UseStaticFiles();// For the wwwroot folder
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "images")),
+                System.IO.Path.Combine(Directory.GetCurrentDirectory(), "images")),
     RequestPath = "/images"
 });
+
 //Enable directory browsing
 app.UseDirectoryBrowser(new DirectoryBrowserOptions
 {
     FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "images")),
+                System.IO.Path.Combine(Directory.GetCurrentDirectory(), "images")),
     RequestPath = "/images"
 });
 
@@ -85,6 +101,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.MapGraphQL("/graphql");
 
 
 app.Run();

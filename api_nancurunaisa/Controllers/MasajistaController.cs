@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using api_nancurunaisa.Models;
 using api_nancurunaisa.Utilities;
 
@@ -76,7 +77,7 @@ namespace api_nancurunaisa.Controllers
             {
                 return BadRequest();
             }
-
+            masajista.password = Encrypt.GetSHA256(masajista.password);
             _context.Entry(masajista).State = EntityState.Modified;
 
             try
@@ -101,15 +102,16 @@ namespace api_nancurunaisa.Controllers
         // POST: api/Masajista
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<masajista>> Postmasajista([FromForm]masajista masajista)
+        public async Task<ActionResult<masajista>> Postmasajista([FromForm] masajista masajista)
         {
 
-          if (_context.masajista == null)
-          {
-              return Problem("Entity set 'nancurunaisadbContext.masajista'  is null.");
-          }
+            if (_context.masajista == null)
+            {
+                return Problem("Entity set 'nancurunaisadbContext.masajista'  is null.");
+            }
 
-            masajista.foto = await SaveImage(masajista.fotoPerfil);
+            //masajista.foto = await SaveImage(masajista.fotoPerfil);
+            masajista.password = Encrypt.GetSHA256(masajista.password);
 
             _context.masajista.Add(masajista);
             await _context.SaveChangesAsync();
@@ -145,9 +147,9 @@ namespace api_nancurunaisa.Controllers
         [NonAction]
         public async Task<string> SaveImage(IFormFile fotoPerfil)
         {
-            string nombreFoto = new String(Path.GetFileNameWithoutExtension(fotoPerfil.Name).Take(10).ToArray()).Replace(' ', '-');
-            nombreFoto = nombreFoto + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(fotoPerfil.FileName);
-            var rutaFoto = Path.Combine(_hostEnvironment.ContentRootPath, "Images", nombreFoto);
+            string nombreFoto = new String(System.IO.Path.GetFileNameWithoutExtension(fotoPerfil.Name).Take(10).ToArray()).Replace(' ', '-');
+            nombreFoto = nombreFoto + DateTime.Now.ToString("yymmssfff") + System.IO.Path.GetExtension(fotoPerfil.FileName);
+            var rutaFoto = System.IO.Path.Combine(_hostEnvironment.ContentRootPath, "Images", nombreFoto);
 
             using (var fileStream = new FileStream(rutaFoto, FileMode.Create))
             {

@@ -1,4 +1,4 @@
-﻿using api_nancurunaisa.Utilities;
+using api_nancurunaisa.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

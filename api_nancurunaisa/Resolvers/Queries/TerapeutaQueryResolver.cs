@@ -1,4 +1,4 @@
-﻿using HotChocolate.Types;
+using HotChocolate.Types;
 using HotChocolate.Types.Pagination;
 
 namespace api_nancurunaisa.Resolvers.Queries

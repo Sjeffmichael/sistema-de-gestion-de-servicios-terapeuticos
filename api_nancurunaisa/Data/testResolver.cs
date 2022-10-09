@@ -1,4 +1,4 @@
-﻿
+
 namespace api_nancurunaisa.Data
 {
     public class testResolver

@@ -10,4 +10,9 @@
     {   
         public AuthToken token { get; set; }
     }
+
+    public class Token
+    {   
+        public AuthToken token { get; set; }
+    }
 }

@@ -1,31 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using api_nancurunaisa.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace api_nancurunaisa.Controllers
+
+namespace api_nancurunaisa.Resolvers.Mutations
 {
-    [Route("api/token")]
-    [ApiController]
-    public class TokenController : ControllerBase
+    [ExtendObjectType("Mutation")]
+    public class Login
     {
-        public IConfiguration _configuration;
-        private readonly nancurunaisadbContext _context;
         public static AuthToken authToken = new AuthToken();
 
-        public TokenController(IConfiguration config, nancurunaisadbContext context)
+        [GraphQLDescription("Autenticación de usuarios")]
+        public async Task<Token> Authentication(
+            [Service] IConfiguration _configuration,
+            [Service] nancurunaisadbContext _context,
+            string? email,
+            string? password
+        )
         {
-            _configuration = config;
-            _context = context;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Post(MasajistaCredentials _userData)
-        {
-            if (_userData != null && _userData.email != null && _userData.password != null)
+            if (email != null && password != null)
             {
-                var user = await GetUser(_userData.email, _userData.password);
+                var user = await GetUser(
+                    _context, 
+                    email,
+                    Encrypt.GetSHA256(password)
+                );
 
                 if (user != null)
                 {
@@ -48,22 +50,38 @@ namespace api_nancurunaisa.Controllers
                         expires: DateTime.UtcNow.AddMinutes(10),
                         signingCredentials: signIn);
                     authToken.token = new JwtSecurityTokenHandler().WriteToken(token);
-                    return Ok(authToken);
+
+                    var generatedToken = new Token()
+                    {
+                        token = authToken
+                    };
+
+                    return generatedToken;
+                    //return Ok(authToken);
                 }
                 else
                 {
-                    return BadRequest("Invalid credentials");
+                    //return BadRequest("Invalid credentials");
+                    throw new GraphQLException(new Error("Credenciales invalidas"));
                 }
             }
             else
             {
-                return BadRequest();
+                //return BadRequest();
+                throw new GraphQLException(new Error("Contraseña o email requeridas"));
             }
         }
 
-        private async Task<masajista> GetUser(string email, string password)
+        private async Task<masajista?> GetUser(
+            [Service] nancurunaisadbContext _context, 
+            string email, 
+            string password
+        )
         {
-            return await _context.masajista.FirstOrDefaultAsync(u => u.correo == email && u.password == password);
+            _context.ChangeTracker.AutoDetectChangesEnabled = false; 
+            return await _context.masajista.FirstOrDefaultAsync(
+                u => u.activo == true && u.correo == email && u.password == password
+            );
         }
     }
 }

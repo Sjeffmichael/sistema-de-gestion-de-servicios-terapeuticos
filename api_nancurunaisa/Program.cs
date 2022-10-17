@@ -18,7 +18,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "http://172.23.82.105:3000")
+                          policy
+                          .WithOrigins(
+                              "http://localhost:3000", 
+                              "http://172.23.82.105:3000",
+                              "http://25.14.18.58:3000")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -53,15 +57,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddGraphQLServer()
-    //.AddFiltering()
     .AddQueryType(d => d.Name("Query"))
         .AddType<TerapeutaQueryResolver>()
+        .AddType<PacienteQueryResolver>()
+        .AddType<TerapiaQueryResolver>()
+        .AddType<PromocionQueryResolver>()
             .AddProjections()
             .AddFiltering()
             .AddSorting()
     .AddMutationType(d => d.Name("Mutation"))
         .AddType<Login>()
         .AddType<TerapeutaMutationResolve>();
+
 
 
 var app = builder.Build();

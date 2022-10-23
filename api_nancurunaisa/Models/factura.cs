@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -11,7 +10,8 @@ namespace api_nancurunaisa.Models
         public double? descuento { get; set; }
         public double subTotal { get; set; }
         public double total { get; set; }
-        [JsonIgnore]
-        public virtual cita? idCitaNavigation { get; set; } = null!;
+        public bool? activo { get; set; }
+
+        public virtual cita idCitaNavigation { get; set; } = null!;
     }
 }

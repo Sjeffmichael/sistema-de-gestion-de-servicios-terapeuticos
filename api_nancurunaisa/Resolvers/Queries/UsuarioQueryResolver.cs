@@ -3,18 +3,18 @@
 namespace api_nancurunaisa.Resolvers.Queries
 {
     [ExtendObjectType("Query")]
-    public class PacienteQueryResolver
+    public class UsuarioQueryResolver
     {
-        [GraphQLDescription("Obtener lista de pacientes")]
+        [GraphQLDescription("Obtener lista de usuarios")]
         [UseOffsetPaging(IncludeTotalCount = true)]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<paciente> GetPaciente(
+        public IQueryable<usuario> GetUsuarios(
             [Service] nancuranaisaDbContext context
         )
         {
-            return context.paciente.AsQueryable();
+            return context.usuario.AsQueryable();
         }
     }
 }

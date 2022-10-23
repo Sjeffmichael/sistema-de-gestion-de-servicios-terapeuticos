@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<nancurunaisadbContext>(options =>
+builder.Services.AddDbContext<nancuranaisaDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"));
 });
@@ -62,12 +62,14 @@ builder.Services
         .AddType<PacienteQueryResolver>()
         .AddType<TerapiaQueryResolver>()
         .AddType<PromocionQueryResolver>()
+        .AddType<UsuarioQueryResolver>()
             .AddProjections()
             .AddFiltering()
             .AddSorting()
     .AddMutationType(d => d.Name("Mutation"))
         .AddType<Login>()
-        .AddType<TerapeutaMutationResolve>();
+        .AddType<TerapeutaMutationResolver>()
+        .AddType<UsuarioMutationResolver>();
 
 
 

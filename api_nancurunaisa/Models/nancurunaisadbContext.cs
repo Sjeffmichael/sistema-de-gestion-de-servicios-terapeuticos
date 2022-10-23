@@ -20,12 +20,12 @@ namespace api_nancurunaisa.Models
         public virtual DbSet<APNP> APNP { get; set; } = null!;
         public virtual DbSet<APP> APP { get; set; } = null!;
         public virtual DbSet<TipoAFP> TipoAFP { get; set; } = null!;
-        public virtual DbSet<VwCitasPendientes> VwCitasPendientes { get; set; } = null!;
-        public virtual DbSet<VwCitasPendientesDomicilio> VwCitasPendientesDomicilio { get; set; } = null!;
-        public virtual DbSet<VwCitasPendientesMasajista> VwCitasPendientesMasajista { get; set; } = null!;
-        public virtual DbSet<VwCitasPendientesSucursal> VwCitasPendientesSucursal { get; set; } = null!;
-        public virtual DbSet<VwMasajistasActivos> VwMasajistasActivos { get; set; } = null!;
-        public virtual DbSet<VwPacientesCitasPendietes> VwPacientesCitasPendietes { get; set; } = null!;
+        //public virtual DbSet<VwCitasPendientes> VwCitasPendientes { get; set; } = null!;
+        //public virtual DbSet<VwCitasPendientesDomicilio> VwCitasPendientesDomicilio { get; set; } = null!;
+        //public virtual DbSet<VwCitasPendientesMasajista> VwCitasPendientesMasajista { get; set; } = null!;
+        //public virtual DbSet<VwCitasPendientesSucursal> VwCitasPendientesSucursal { get; set; } = null!;
+        //public virtual DbSet<VwMasajistasActivos> VwMasajistasActivos { get; set; } = null!;
+        //public virtual DbSet<VwPacientesCitasPendietes> VwPacientesCitasPendietes { get; set; } = null!;
         public virtual DbSet<amnanesis> amnanesis { get; set; } = null!;
         public virtual DbSet<amnanesisInfo> amnanesisInfo { get; set; } = null!;
         public virtual DbSet<cita> cita { get; set; } = null!;
@@ -118,110 +118,110 @@ namespace api_nancurunaisa.Models
                     .HasConstraintName("FK__TipoAFP__idAmnan__03F0984C");
             });
 
-            modelBuilder.Entity<VwCitasPendientes>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwCitasPendientes>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwCitasPendientes");
+            //    entity.ToView("VwCitasPendientes");
 
-                entity.Property(e => e.color).HasMaxLength(10);
+            //    entity.Property(e => e.color).HasMaxLength(10);
 
-                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+            //    entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
 
-                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+            //    entity.Property(e => e.fechaHora).HasColumnType("datetime");
 
-                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
-            });
+            //    entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            //});
 
-            modelBuilder.Entity<VwCitasPendientesDomicilio>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwCitasPendientesDomicilio>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwCitasPendientesDomicilio");
+            //    entity.ToView("VwCitasPendientesDomicilio");
 
-                entity.Property(e => e.color).HasMaxLength(10);
+            //    entity.Property(e => e.color).HasMaxLength(10);
 
-                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+            //    entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
 
-                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+            //    entity.Property(e => e.fechaHora).HasColumnType("datetime");
 
-                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
-            });
+            //    entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            //});
 
-            modelBuilder.Entity<VwCitasPendientesMasajista>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwCitasPendientesMasajista>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwCitasPendientesMasajista");
+            //    entity.ToView("VwCitasPendientesMasajista");
 
-                entity.Property(e => e.Citas_Pendientes).HasColumnName("Citas Pendientes");
+            //    entity.Property(e => e.Citas_Pendientes).HasColumnName("Citas Pendientes");
 
-                entity.Property(e => e.apellidos).HasMaxLength(50);
+            //    entity.Property(e => e.apellidos).HasMaxLength(50);
 
-                entity.Property(e => e.nombres).HasMaxLength(50);
-            });
+            //    entity.Property(e => e.nombres).HasMaxLength(50);
+            //});
 
-            modelBuilder.Entity<VwCitasPendientesSucursal>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwCitasPendientesSucursal>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwCitasPendientesSucursal");
+            //    entity.ToView("VwCitasPendientesSucursal");
 
-                entity.Property(e => e.color).HasMaxLength(10);
+            //    entity.Property(e => e.color).HasMaxLength(10);
 
-                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+            //    entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
 
-                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+            //    entity.Property(e => e.fechaHora).HasColumnType("datetime");
 
-                entity.Property(e => e.idCita).ValueGeneratedOnAdd();
-            });
+            //    entity.Property(e => e.idCita).ValueGeneratedOnAdd();
+            //});
 
-            modelBuilder.Entity<VwMasajistasActivos>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwMasajistasActivos>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwMasajistasActivos");
+            //    entity.ToView("VwMasajistasActivos");
 
-                entity.Property(e => e.apellidos).HasMaxLength(50);
+            //    entity.Property(e => e.apellidos).HasMaxLength(50);
 
-                entity.Property(e => e.correo).HasMaxLength(256);
+            //    entity.Property(e => e.correo).HasMaxLength(256);
 
-                entity.Property(e => e.fechaNacimiento).HasColumnType("datetime");
+            //    entity.Property(e => e.fechaNacimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.foto)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.foto)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.horaEntrada).HasColumnType("datetime");
+            //    entity.Property(e => e.horaEntrada).HasColumnType("datetime");
 
-                entity.Property(e => e.horaSalida).HasColumnType("datetime");
+            //    entity.Property(e => e.horaSalida).HasColumnType("datetime");
 
-                entity.Property(e => e.idMasajista).ValueGeneratedOnAdd();
+            //    entity.Property(e => e.idMasajista).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.nombres).HasMaxLength(50);
+            //    entity.Property(e => e.nombres).HasMaxLength(50);
 
-                entity.Property(e => e.numCel).HasMaxLength(20);
+            //    entity.Property(e => e.numCel).HasMaxLength(20);
 
-                entity.Property(e => e.password).HasMaxLength(50);
+            //    entity.Property(e => e.password).HasMaxLength(50);
 
-                entity.Property(e => e.roll).HasMaxLength(30);
+            //    entity.Property(e => e.roll).HasMaxLength(30);
 
-                entity.Property(e => e.sexo)
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-            });
+            //    entity.Property(e => e.sexo)
+            //        .HasMaxLength(1)
+            //        .IsUnicode(false)
+            //        .IsFixedLength();
+            //});
 
-            modelBuilder.Entity<VwPacientesCitasPendietes>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<VwPacientesCitasPendietes>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("VwPacientesCitasPendietes");
+            //    entity.ToView("VwPacientesCitasPendietes");
 
-                entity.Property(e => e.apellidos).HasMaxLength(50);
+            //    entity.Property(e => e.apellidos).HasMaxLength(50);
 
-                entity.Property(e => e.nombres).HasMaxLength(50);
-            });
+            //    entity.Property(e => e.nombres).HasMaxLength(50);
+            //});
 
             modelBuilder.Entity<amnanesis>(entity =>
             {
@@ -237,10 +237,10 @@ namespace api_nancurunaisa.Models
 
                 entity.Property(e => e.estadoCivil).HasMaxLength(50);
 
-                entity.HasOne(d => d.idPacienteNavigation)
-                    .WithMany(p => p.amnanesis)
-                    .HasForeignKey(d => d.idPaciente)
-                    .HasConstraintName("FK__amnanesis__idPac__72C60C4A");
+                //entity.HasOne(d => d.idPacienteNavigation)
+                    //.WithMany(p => p.amnanesis)
+                    //.HasForeignKey(d => d.idPaciente)
+                    //.HasConstraintName("FK__amnanesis__idPac__72C60C4A");
             });
 
             modelBuilder.Entity<amnanesisInfo>(entity =>
@@ -272,33 +272,33 @@ namespace api_nancurunaisa.Models
                 entity.HasIndex(e => e.idCita, "UQ__cita__814F3127699C3400")
                     .IsUnique();
 
-                entity.Property(e => e.color).HasMaxLength(10);
+                //entity.Property(e => e.color).HasMaxLength(10);
 
-                entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
+                //entity.Property(e => e.direccion_domicilio).HasMaxLength(100);
 
-                entity.Property(e => e.fechaHora).HasColumnType("datetime");
+                //entity.Property(e => e.fechaHora).HasColumnType("datetime");
 
-                entity.Property(e => e.pendiente)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                //entity.Property(e => e.pendiente)
+                //    .IsRequired()
+                //    .HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.idHabitacionNavigation)
                     .WithMany(p => p.cita)
                     .HasForeignKey(d => d.idHabitacion)
                     .HasConstraintName("FK__cita__idHabitaci__7C4F7684");
 
-                entity.HasMany(d => d.idMasajista)
-                    .WithMany(p => p.idCita)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "masajistaCita",
-                        l => l.HasOne<masajista>().WithMany().HasForeignKey("idMasajista").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__masajista__idMas__7A672E12"),
-                        r => r.HasOne<cita>().WithMany().HasForeignKey("idCita").HasConstraintName("FK__masajista__idCit__75A278F5"),
-                        j =>
-                        {
-                            j.HasKey("idCita", "idMasajista").HasName("PK__masajist__F6862EA9BEAF2E8B");
+                //entity.HasMany(d => d.idMasajista)
+                    //.WithMany(p => p.idCita)
+                    //.UsingEntity<Dictionary<string, object>>(
+                    //    "masajistaCita",
+                    //    l => l.HasOne<masajista>().WithMany().HasForeignKey("idMasajista").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__masajista__idMas__7A672E12"),
+                    //    r => r.HasOne<cita>().WithMany().HasForeignKey("idCita").HasConstraintName("FK__masajista__idCit__75A278F5"),
+                    //    j =>
+                    //    {
+                    //        j.HasKey("idCita", "idMasajista").HasName("PK__masajist__F6862EA9BEAF2E8B");
 
-                            j.ToTable("masajistaCita");
-                        });
+                    //        j.ToTable("masajistaCita");
+                    //    });
 
                 entity.HasMany(d => d.idTerapia)
                     .WithMany(p => p.idCita)
@@ -398,23 +398,23 @@ namespace api_nancurunaisa.Models
                     .IsUnicode(false)
                     .IsFixedLength();
 
-                entity.HasOne(d => d.idSucursalNavigation)
-                    .WithMany(p => p.masajista)
-                    .HasForeignKey(d => d.idSucursal)
-                    .HasConstraintName("FK__masajista__idSuc__7E37BEF6");
+                //entity.HasOne(d => d.idSucursalNavigation)
+                    //.WithMany(p => p.masajista)
+                    //.HasForeignKey(d => d.idSucursal)
+                    //.HasConstraintName("FK__masajista__idSuc__7E37BEF6");
 
-                entity.HasMany(d => d.idDia)
-                    .WithMany(p => p.idMasajista)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "diaLibre",
-                        l => l.HasOne<dia>().WithMany().HasForeignKey("idDia").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__diaLibre__idDia__05D8E0BE"),
-                        r => r.HasOne<masajista>().WithMany().HasForeignKey("idMasajista").HasConstraintName("FK__diaLibre__idMasa__7B5B524B"),
-                        j =>
-                        {
-                            j.HasKey("idMasajista", "idDia").HasName("PK__diaLibre__1F75EEAFB9027FC2");
+                //entity.HasMany(d => d.idDia)
+                //    .WithMany(p => p.idMasajista)
+                //    .UsingEntity<Dictionary<string, object>>(
+                //        "diaLibre",
+                //        l => l.HasOne<dia>().WithMany().HasForeignKey("idDia").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__diaLibre__idDia__05D8E0BE"),
+                //        r => r.HasOne<masajista>().WithMany().HasForeignKey("idMasajista").HasConstraintName("FK__diaLibre__idMasa__7B5B524B"),
+                //        j =>
+                //        {
+                //            j.HasKey("idMasajista", "idDia").HasName("PK__diaLibre__1F75EEAFB9027FC2");
 
-                            j.ToTable("diaLibre");
-                        });
+                //            j.ToTable("diaLibre");
+                //        });
             });
 
             modelBuilder.Entity<paciente>(entity =>
@@ -427,7 +427,7 @@ namespace api_nancurunaisa.Models
 
                 entity.Property(e => e.apellidos).HasMaxLength(50);
 
-                entity.Property(e => e.fecha_nacimiento).HasColumnType("datetime");
+                //entity.Property(e => e.fecha_nacimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.nacionalidad).HasMaxLength(50);
 
@@ -435,7 +435,7 @@ namespace api_nancurunaisa.Models
 
                 entity.Property(e => e.numCel).HasMaxLength(20);
 
-                entity.Property(e => e.profesion_oficio).HasMaxLength(50);
+                //entity.Property(e => e.profesion_oficio).HasMaxLength(50);
 
                 entity.Property(e => e.sexo)
                     .HasMaxLength(1)
@@ -447,15 +447,15 @@ namespace api_nancurunaisa.Models
                 entity.HasKey(e => new { e.idCita, e.idPaciente })
                     .HasName("PK__paciente__BE0791A94C1046DE");
 
-                entity.HasOne(d => d.idCitaNavigation)
-                    .WithMany(p => p.pacienteCita)
-                    .HasForeignKey(d => d.idCita)
-                    .HasConstraintName("FK__pacienteC__idCit__74AE54BC");
+                //entity.HasOne(d => d.idCitaNavigation)
+                //    //.WithMany(p => p.pacienteCita)
+                //    //.HasForeignKey(d => d.idCita)
+                //    .HasConstraintName("FK__pacienteC__idCit__74AE54BC");
 
-                entity.HasOne(d => d.idPacienteNavigation)
-                    .WithMany(p => p.pacienteCita)
-                    .HasForeignKey(d => d.idPaciente)
-                    .HasConstraintName("FK__pacienteC__idPac__71D1E811");
+                //entity.HasOne(d => d.idPacienteNavigation)
+                //    //.WithMany(p => p.pacienteCita)
+                //    .HasForeignKey(d => d.idPaciente)
+                //    .HasConstraintName("FK__pacienteC__idPac__71D1E811");
             });
 
             modelBuilder.Entity<promocion>(entity =>

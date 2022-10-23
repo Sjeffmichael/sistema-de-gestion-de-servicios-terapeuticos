@@ -1,3 +1,5 @@
+using api_nancurunaisa.Data;
+using api_nancurunaisa.Models;
 using api_nancurunaisa.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +18,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
         [GraphQLDescription("Autenticación de usuarios")]
         public async Task<Token> Authentication(
             [Service] IConfiguration _configuration,
-            [Service] nancurunaisadbContext _context,
+            [Service] nancuranaisaDbContext _context,
             string? email,
             string? password
         )
@@ -36,9 +38,9 @@ namespace api_nancurunaisa.Resolvers.Mutations
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim("UserId", user.idMasajista.ToString()),
-                        new Claim("Email", user.correo),
-                        new Claim("Roll", user.roll),
+                        new Claim("UserId", user.idUsuario.ToString()),
+                        new Claim("Email", user.email),
+
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -72,15 +74,15 @@ namespace api_nancurunaisa.Resolvers.Mutations
             }
         }
 
-        private async Task<masajista?> GetUser(
-            [Service] nancurunaisadbContext _context, 
+        private async Task<usuario?> GetUser(
+            [Service] nancuranaisaDbContext _context, 
             string email, 
             string password
         )
         {
             _context.ChangeTracker.AutoDetectChangesEnabled = false; 
-            return await _context.masajista.FirstOrDefaultAsync(
-                u => u.activo == true && u.correo == email && u.password == password
+            return await _context.usuario.FirstOrDefaultAsync(
+                u => u.activo == true && u.email == email && u.password == password
             );
         }
     }

@@ -13,8 +13,6 @@ namespace api_nancurunaisa.Data
         {
         }
 
-
-
         public nancuranaisaDbContext(DbContextOptions<nancuranaisaDbContext> options)
             : base(options)
         {

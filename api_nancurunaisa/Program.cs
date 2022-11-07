@@ -63,13 +63,21 @@ builder.Services
         .AddType<TerapiaQueryResolver>()
         .AddType<PromocionQueryResolver>()
         .AddType<UsuarioQueryResolver>()
+        .AddType<DiaLibreQueryResolver>()
+        .AddType<ModuloQueryResolver>()
+        .AddType<OperacionQueryResolver>()
+        .AddType<RolQueryResolver>()
             .AddProjections()
             .AddFiltering()
             .AddSorting()
     .AddMutationType(d => d.Name("Mutation"))
         .AddType<Login>()
         .AddType<TerapeutaMutationResolver>()
-        .AddType<UsuarioMutationResolver>();
+        .AddType<UsuarioMutationResolver>()
+        .AddType<DiaLibreMutationResolver>()
+        .AddType<ModuloMutationResolver>()
+        .AddType<OperacionMutationResolver>()
+        .AddType<RolMutationResolver>();
 
 
 

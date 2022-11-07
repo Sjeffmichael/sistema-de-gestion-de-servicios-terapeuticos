@@ -11,10 +11,17 @@ namespace api_nancurunaisa.Resolvers.Queries
         [UseFiltering]
         [UseSorting]
         public IQueryable<terapeuta> GetTerapeutas(
-            [Service] nancuranaisaDbContext context
+            [Service] nancuranaisaDbContext context,
+            string nombreUsuario = ""
         ) 
         {
-            return context.terapeuta.AsQueryable();
+            return context.terapeuta
+                          .Where(
+                            t => (
+                                t.idUsuarioNavigation.nombres + ' ' + t.idUsuarioNavigation.apellidos
+                            ).Contains(nombreUsuario)
+                          )
+                          .AsQueryable();
         } 
     }
 }

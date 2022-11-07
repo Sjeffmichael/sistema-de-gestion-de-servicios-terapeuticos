@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using api_nancurunaisa.Models;
+using EntityFramework.Exceptions.SqlServer;
 
 namespace api_nancurunaisa.Data
 {
@@ -11,6 +12,8 @@ namespace api_nancurunaisa.Data
         public nancuranaisaDbContext()
         {
         }
+
+
 
         public nancuranaisaDbContext(DbContextOptions<nancuranaisaDbContext> options)
             : base(options)
@@ -36,11 +39,12 @@ namespace api_nancurunaisa.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=LAPTOP-KDP5R0OF\\SQLEXPRESS; Initial Catalog= nancuranaisaDB2; Integrated Security=true");
-            }
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                //optionsBuilder.UseSqlServer("Data Source=LAPTOP-KDP5R0OF\\SQLEXPRESS; Initial Catalog= nancuranaisaDB2; Integrated Security=true; encrypt=false");
+//            }
+            optionsBuilder.UseExceptionProcessor();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -141,10 +145,11 @@ namespace api_nancurunaisa.Data
 
             modelBuilder.Entity<diaLibre>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.idTerapeuta, e.idDia })
+                    .HasName("diaLibre_pk");
 
                 entity.HasOne(d => d.idTerapeutaNavigation)
-                    .WithMany()
+                    .WithMany(p => p.diaLibre)
                     .HasForeignKey(d => d.idTerapeuta)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__diaLibre__idTera__06CD04F7");
@@ -442,6 +447,9 @@ namespace api_nancurunaisa.Data
                     .HasName("PK__usuario__645723A6A35994DA");
 
                 entity.HasIndex(e => e.idUsuario, "UQ__usuario__645723A7894FEDEC")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.email, "usuario_email_uindex")
                     .IsUnique();
 
                 entity.Property(e => e.activo)

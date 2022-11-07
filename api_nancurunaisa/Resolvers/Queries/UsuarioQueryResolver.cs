@@ -11,10 +11,14 @@ namespace api_nancurunaisa.Resolvers.Queries
         [UseFiltering]
         [UseSorting]
         public IQueryable<usuario> GetUsuarios(
-            [Service] nancuranaisaDbContext context
+            [Service] nancuranaisaDbContext context,
+            string nombreUsuario = ""
         )
         {
-            return context.usuario.AsQueryable();
+            return context.usuario
+                          .Where(t => (t.nombres + ' ' + t.apellidos)
+                          .Contains(nombreUsuario))
+                          .AsQueryable();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace api_nancurunaisa.Models
     {
         public terapeuta()
         {
+            diaLibre = new HashSet<diaLibre>();
             idCita = new HashSet<cita>();
             idTerapia = new HashSet<terapia>();
         }
@@ -19,6 +20,7 @@ namespace api_nancurunaisa.Models
 
         public virtual sucursal? idSucursalNavigation { get; set; } = null!;
         public virtual usuario? idUsuarioNavigation { get; set; } = null!;
+        public virtual ICollection<diaLibre> diaLibre { get; set; }
 
         public virtual ICollection<cita>? idCita { get; set; }
         public virtual ICollection<terapia>? idTerapia { get; set; }

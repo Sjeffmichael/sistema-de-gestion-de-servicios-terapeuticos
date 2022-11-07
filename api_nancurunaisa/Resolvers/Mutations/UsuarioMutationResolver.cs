@@ -1,5 +1,6 @@
 ﻿using api_nancurunaisa.Data;
 using api_nancurunaisa.Utilities;
+using EntityFramework.Exceptions.Common;
 
 namespace api_nancurunaisa.Resolvers.Mutations
 {
@@ -22,13 +23,19 @@ namespace api_nancurunaisa.Resolvers.Mutations
 
                 return usuario;
             }
-            catch (DbUpdateException)
+            catch (UniqueConstraintException)
             {
                 throw new GraphQLException(
                     new Error("Este correo ya existe, intente con otro")
                 );
             }
-        }
+            catch (MaxLengthExceededException)
+            {
+                throw new GraphQLException(
+                    new Error("El valor para el campo sexo es demasiado largo")
+                );
+            }
+}
 
 
         [GraphQLDescription("Actualizar estado de usuario")]

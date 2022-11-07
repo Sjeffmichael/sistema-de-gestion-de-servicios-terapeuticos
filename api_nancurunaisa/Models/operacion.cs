@@ -10,14 +10,14 @@ namespace api_nancurunaisa.Models
             idRol = new HashSet<rol>();
         }
 
-        public int idOperacion { get; set; }
+        public int? idOperacion { get; set; }
         public int idModulo { get; set; }
         public string nombre { get; set; } = null!;
         public string descripcion { get; set; } = null!;
         public bool? activo { get; set; }
 
-        public virtual modulo idModuloNavigation { get; set; } = null!;
+        public virtual modulo? idModuloNavigation { get; set; } = null!;
 
-        public virtual ICollection<rol> idRol { get; set; }
+        public virtual ICollection<rol>? idRol { get; set; }
     }
 }

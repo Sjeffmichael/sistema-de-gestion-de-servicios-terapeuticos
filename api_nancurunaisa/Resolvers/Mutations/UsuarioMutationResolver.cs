@@ -75,24 +75,46 @@ namespace api_nancurunaisa.Resolvers.Mutations
         [GraphQLDescription("Actualizar usuario")]
         public async Task<usuario> actualizarUsuario(
             [Service] nancuranaisaDbContext _context,
-            usuario usuarioInput
+            UsuarioInput usuarioInput
         )
         {
             try
             {
-
+                // eliminar roles del usuario 
+                await _context.Database.ExecuteSqlRawAsync(
+                    "DELETE usuarioRol WHERE idUsuario = {0}",
+                    usuarioInput.idUsuario
+                );
+                 
+                // obtener contraseña
                 var userPassword = (from u in _context.usuario
-                                where (u.idUsuario == usuarioInput.idUsuario)
-                                select new
-                                {
-                                    password = u.password
-                                }).FirstOrDefault();
+                                    where (u.idUsuario == usuarioInput.idUsuario)
+                                    select new
+                                    {
+                                        password = u.password
+                                    }).FirstOrDefault();
 
-                usuarioInput.password = userPassword!.password;
+                // obtener lista de roles que se desean agregar
+                List<rol> roles = _context.rol.Where(
+                    r => usuarioInput.roles.Contains((int)r.idRol)).ToList();
 
-                _context.usuario.Update(usuarioInput);
+                usuario usuario = new usuario()
+                {
+                    idUsuario = usuarioInput.idUsuario,
+                    nombres = usuarioInput.nombres,
+                    apellidos = usuarioInput.apellidos,
+                    password = userPassword!.password,
+                    email = usuarioInput.email,
+                    sexo = usuarioInput.sexo,
+                    fechaNacimiento = usuarioInput.fechaNacimiento,
+                    idRol = roles,
+                    numCel = usuarioInput.numCel,
+                    activo = usuarioInput.activo
+                };
+
+                _context.usuario.Update(usuario);
                 await _context.SaveChangesAsync();
-                return usuarioInput;
+                return usuario;
             }
             catch (DbUpdateException)
             {

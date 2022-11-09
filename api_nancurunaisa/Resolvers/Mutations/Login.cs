@@ -3,6 +3,7 @@ using api_nancurunaisa.Models;
 using api_nancurunaisa.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -33,6 +34,13 @@ namespace api_nancurunaisa.Resolvers.Mutations
 
                 if (user != null)
                 {
+                    // get user permissions
+                    var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p => 
+                        p.idRol.Select(r => r.idOperacion.Select(o => new { 
+                            operacion = o.nombre, modulo = o.idModuloNavigation.nombre 
+                        }))
+                    ).First();
+
                     //create claims details based on the user information
                     var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
@@ -40,6 +48,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("UserId", user.idUsuario.ToString()),
                         new Claim("Email", user.email),
+                        new Claim("permisos", JsonConvert.SerializeObject(permisos, Formatting.Indented)),
 
                     };
 
@@ -59,17 +68,14 @@ namespace api_nancurunaisa.Resolvers.Mutations
                     };
 
                     return generatedToken;
-                    //return Ok(authToken);
                 }
                 else
                 {
-                    //return BadRequest("Invalid credentials");
                     throw new GraphQLException(new Error("Credenciales invalidas"));
                 }
             }
             else
             {
-                //return BadRequest();
                 throw new GraphQLException(new Error("Contraseña o email requeridas"));
             }
         }

@@ -10,11 +10,29 @@ namespace api_nancurunaisa.Resolvers.Mutations
         [GraphQLDescription("Crear nuevo usuario")]
         public async Task<usuario> crearUsuario(
             [Service] nancuranaisaDbContext _context,
-            usuario usuario
+            UsuarioInput usuarioInput
         )
         {
             //masajista.foto = await SaveImage(masajista.fotoPerfil);
-            usuario.password = Encrypt.GetSHA256(usuario.password!);
+            usuarioInput.password = Encrypt.GetSHA256(usuarioInput.password!);
+
+            List<rol> roles = _context.rol.Where(
+                    r => usuarioInput.roles.Contains((int)r.idRol)).ToList();
+
+            usuario usuario = new usuario()
+            {
+                idUsuario = usuarioInput.idUsuario,
+                nombres = usuarioInput.nombres,
+                apellidos = usuarioInput.apellidos,
+                password = usuarioInput.password,
+                email = usuarioInput.email,
+                sexo = usuarioInput.sexo,
+                fechaNacimiento = usuarioInput.fechaNacimiento,
+                idRol = roles,
+                numCel = usuarioInput.numCel,
+                activo = usuarioInput.activo
+            };
+
 
             try
             {
@@ -116,7 +134,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
                 await _context.SaveChangesAsync();
                 return usuario;
             }
-            catch (DbUpdateException)
+            catch (UniqueConstraintException)
             {
                 throw new GraphQLException(
                     new Error("Este correo ya existe, intente con otro")

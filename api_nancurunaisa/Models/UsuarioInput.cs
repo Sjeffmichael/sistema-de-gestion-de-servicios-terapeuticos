@@ -7,6 +7,7 @@
         public string nombres { get; set; } = null!;
         public string apellidos { get; set; } = null!;
         public DateTime fechaNacimiento { get; set; }
+        public string? password { get; set; }
         public string numCel { get; set; } = null!;
         public string sexo { get; set; } = null!;
         public bool? activo { get; set; }

@@ -227,8 +227,6 @@ namespace api_nancurunaisa.Data
                 entity.HasIndex(e => e.idNombreDet, "UQ__nombreDe__51D2D0FA380E5EC1")
                     .IsUnique();
 
-                entity.Property(e => e.idNombreDet).ValueGeneratedNever();
-
                 entity.Property(e => e.activo)
                     .IsRequired()
                     .HasDefaultValueSql("((1))");

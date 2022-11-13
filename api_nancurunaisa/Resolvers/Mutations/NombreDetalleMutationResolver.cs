@@ -18,7 +18,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
         }
 
         [GraphQLDescription("Actualizar estado de nombre detalle")]
-        public async Task<List<nombreDetalle>> actualizarNombreDetalle(
+        public async Task<List<nombreDetalle>> actualizarEstadoNombreDetalle(
             [Service] nancuranaisaDbContext _context,
             List<int> idNombresDetalle,
             bool activo

@@ -11,7 +11,7 @@ namespace api_nancurunaisa.Models
             idCita = new HashSet<cita>();
         }
 
-        public int idPaciente { get; set; }
+        public int? idPaciente { get; set; }
         public string nombres { get; set; } = null!;
         public string apellidos { get; set; } = null!;
         public string sexo { get; set; } = null!;
@@ -25,8 +25,8 @@ namespace api_nancurunaisa.Models
         public string? direccion { get; set; }
         public bool? activo { get; set; }
 
-        public virtual ICollection<detalleHC> detalleHC { get; set; }
+        public virtual ICollection<detalleHC>? detalleHC { get; set; }
 
-        public virtual ICollection<cita> idCita { get; set; }
+        public virtual ICollection<cita>? idCita { get; set; }
     }
 }

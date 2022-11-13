@@ -10,10 +10,10 @@ namespace api_nancurunaisa.Models
             detalleHC = new HashSet<detalleHC>();
         }
 
-        public int idNombreDet { get; set; }
+        public int? idNombreDet { get; set; }
         public string nombreDetalle1 { get; set; } = null!;
         public bool? activo { get; set; }
 
-        public virtual ICollection<detalleHC> detalleHC { get; set; }
+        public virtual ICollection<detalleHC>? detalleHC { get; set; }
     }
 }

@@ -35,11 +35,14 @@ namespace api_nancurunaisa.Resolvers.Mutations
                 if (user != null)
                 {
                     // get user permissions
-                    var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p => 
-                        p.idRol.Select(r => r.idOperacion.Select(o => new { 
-                            operacion = o.nombre, modulo = o.idModuloNavigation.nombre 
-                        }))
-                    ).First();
+                    //var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p => 
+                    //    p.idRol.Select(r => r.idOperacion.Select(o => new { 
+                    //        operacion = o.nombre, modulo = o.idModuloNavigation.nombre 
+                    //    }))
+                    //).First();
+                    // get user permissions
+                    var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p =>
+                        p.idRol.Select(r => new { r.idRol, r.nombreRol })).First();
 
                     //create claims details based on the user information
                     var claims = new[] {

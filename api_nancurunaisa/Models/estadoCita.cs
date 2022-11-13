@@ -10,9 +10,9 @@ namespace api_nancurunaisa.Models
             cita = new HashSet<cita>();
         }
 
-        public int idEstado { get; set; }
+        public int? idEstado { get; set; }
         public string nombre { get; set; } = null!;
 
-        public virtual ICollection<cita> cita { get; set; }
+        public virtual ICollection<cita>? cita { get; set; }
     }
 }

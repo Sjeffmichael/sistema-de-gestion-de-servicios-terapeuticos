@@ -11,12 +11,12 @@ namespace api_nancurunaisa.Models
             terapeuta = new HashSet<terapeuta>();
         }
 
-        public int idSucursal { get; set; }
+        public int? idSucursal { get; set; }
         public string nombreSucursal { get; set; } = null!;
         public string direccion { get; set; } = null!;
         public bool? activo { get; set; }
 
-        public virtual ICollection<habitacion> habitacion { get; set; }
-        public virtual ICollection<terapeuta> terapeuta { get; set; }
+        public virtual ICollection<habitacion>? habitacion { get; set; }
+        public virtual ICollection<terapeuta>? terapeuta { get; set; }
     }
 }

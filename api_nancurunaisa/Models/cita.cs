@@ -15,22 +15,22 @@ namespace api_nancurunaisa.Models
             idTerapia = new HashSet<terapia>();
         }
 
-        public int idCita { get; set; }
+        public int? idCita { get; set; }
         public DateTime fechaHora { get; set; }
         public string? direccionDomicilio { get; set; }
-        public int idHabitacion { get; set; }
+        public int? idHabitacion { get; set; }
         public int idEstado { get; set; }
         public TimeSpan? horaInicio { get; set; }
         public TimeSpan? horaFin { get; set; }
 
-        public virtual estadoCita idEstadoNavigation { get; set; } = null!;
-        public virtual habitacion idHabitacionNavigation { get; set; } = null!;
-        public virtual ICollection<detalleHC> detalleHC { get; set; }
-        public virtual ICollection<factura> factura { get; set; }
+        public virtual estadoCita? idEstadoNavigation { get; set; } = null!;
+        public virtual habitacion? idHabitacionNavigation { get; set; } = null!;
+        public virtual ICollection<detalleHC>? detalleHC { get; set; }
+        public virtual ICollection<factura>? factura { get; set; }
 
-        public virtual ICollection<paciente> idPaciente { get; set; }
-        public virtual ICollection<promocion> idPromocion { get; set; }
-        public virtual ICollection<terapeuta> idTerapeuta { get; set; }
-        public virtual ICollection<terapia> idTerapia { get; set; }
+        public virtual ICollection<paciente>? idPaciente { get; set; }
+        public virtual ICollection<promocion>? idPromocion { get; set; }
+        public virtual ICollection<terapeuta>? idTerapeuta { get; set; }
+        public virtual ICollection<terapia>? idTerapia { get; set; }
     }
 }

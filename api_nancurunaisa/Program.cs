@@ -72,6 +72,7 @@ builder.Services
         .AddType<SucursalQueryResolver>()
         .AddType<NombreDetalleQueryResolver>()
         .AddType<DetalleHCQueryResolver>()
+        .AddType<CitaQueryResolver>()
             .AddProjections()
             .AddFiltering()
             .AddSorting()
@@ -90,7 +91,8 @@ builder.Services
         .AddType<SucursalMutationResolver>()
         .AddType<NombreDetalleMutationResolver>()
         .AddType<DetalleHCMutationResolver>()
-        .AddType<PacienteMutationResolver>();
+        .AddType<PacienteMutationResolver>()
+        .AddType<CitaMutationResolver>();
 
 
 

@@ -119,8 +119,6 @@ namespace api_nancurunaisa.Data
                 entity.HasIndex(e => e.idDetalle, "UQ__detalleH__49CAE2FAB15E7661")
                     .IsUnique();
 
-                entity.Property(e => e.idDetalle).ValueGeneratedNever();
-
                 entity.Property(e => e.descripcion).HasMaxLength(200);
 
                 entity.HasOne(d => d.idCitaNavigation)

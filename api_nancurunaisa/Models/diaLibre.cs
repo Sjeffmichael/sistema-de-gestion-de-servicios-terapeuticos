@@ -5,9 +5,9 @@ namespace api_nancurunaisa.Models
 {
     public partial class diaLibre
     {
-        public int idTerapeuta { get; set; }
+        public int? idTerapeuta { get; set; }
         public int idDia { get; set; }
 
-        public virtual terapeuta idTerapeutaNavigation { get; set; } = null!;
+        public virtual terapeuta? idTerapeutaNavigation { get; set; } = null!;
     }
 }

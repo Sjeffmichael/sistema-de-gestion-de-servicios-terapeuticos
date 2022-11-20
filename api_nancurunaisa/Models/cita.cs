@@ -19,7 +19,7 @@ namespace api_nancurunaisa.Models
         public DateTime fechaHora { get; set; }
         public string? direccionDomicilio { get; set; }
         public int? idHabitacion { get; set; }
-        public int idEstado { get; set; }
+        public int idEstado { get; set; } = 3;
         public TimeSpan? horaInicio { get; set; }
         public TimeSpan? horaFin { get; set; }
 

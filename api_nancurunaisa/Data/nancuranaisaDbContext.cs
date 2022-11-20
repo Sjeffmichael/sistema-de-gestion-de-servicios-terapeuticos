@@ -68,7 +68,6 @@ namespace api_nancurunaisa.Data
                 entity.HasOne(d => d.idHabitacionNavigation)
                     .WithMany(p => p.cita)
                     .HasForeignKey(d => d.idHabitacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__cita__idHabitaci__07C12930");
 
                 entity.HasMany(d => d.idPaciente)

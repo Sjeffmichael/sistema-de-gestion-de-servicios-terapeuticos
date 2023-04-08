@@ -89,7 +89,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
             string password
         )
         {
-            _context.ChangeTracker.AutoDetectChangesEnabled = false; 
+            //_context.ChangeTracker.AutoDetectChangesEnabled = false; 
             return await _context.usuario.FirstOrDefaultAsync(
                 u => u.activo == true && u.email == email && u.password == password
             );

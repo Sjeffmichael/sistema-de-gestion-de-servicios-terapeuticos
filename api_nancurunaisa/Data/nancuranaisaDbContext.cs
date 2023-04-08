@@ -59,6 +59,12 @@ namespace api_nancurunaisa.Data
 
                 entity.Property(e => e.fechaHora).HasColumnType("datetime");
 
+                entity.Property(e => e.horaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.horaInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.idEstado).HasDefaultValueSql("((3))");
+
                 entity.HasOne(d => d.idEstadoNavigation)
                     .WithMany(p => p.cita)
                     .HasForeignKey(d => d.idEstado)

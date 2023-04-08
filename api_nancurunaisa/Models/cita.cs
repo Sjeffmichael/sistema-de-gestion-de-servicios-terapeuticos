@@ -20,8 +20,8 @@ namespace api_nancurunaisa.Models
         public string? direccionDomicilio { get; set; }
         public int? idHabitacion { get; set; }
         public int idEstado { get; set; } = 3;
-        public TimeSpan? horaInicio { get; set; }
-        public TimeSpan? horaFin { get; set; }
+        public DateTime? horaInicio { get; set; }
+        public DateTime? horaFin { get; set; }
 
         public virtual estadoCita? idEstadoNavigation { get; set; } = null!;
         public virtual habitacion? idHabitacionNavigation { get; set; } = null!;

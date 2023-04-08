@@ -7,11 +7,12 @@
         public string? direccionDomicilio { get; set; }
         public int? idHabitacion { get; set; } = null!;
         public int? idEstado { get; set; } = 3;
-        public TimeSpan? horaInicio { get; set; }
-        public TimeSpan? horaFin { get; set; }
+        public DateTime? horaInicio { get; set; }
+        public DateTime? horaFin { get; set; }
         public List<int>? idPacientes { get; set; }
         public List<int>? idPromociones { get; set; }
         public List<int>? idTerapeutas { get; set; }
         public List<int>? idTerapias { get; set; }
+        public List<detalleHC>? historialClinico { get; set; }
     }
 }

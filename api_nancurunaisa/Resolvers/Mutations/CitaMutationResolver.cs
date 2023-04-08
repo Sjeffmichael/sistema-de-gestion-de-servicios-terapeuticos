@@ -11,22 +11,39 @@ namespace api_nancurunaisa.Resolvers.Mutations
             CitaInput citaInput
         )
         {
+            List<paciente> pacientes = new List<paciente>(); 
+            List<terapeuta> terapeutas = new List<terapeuta>();
+            List<promocion> promociones = new List<promocion>();
+            List<terapia> terapias = new List<terapia>();
 
-            List<paciente> pacientes = await _context.paciente.Where(
-                    p => citaInput.idPacientes.Contains((int)p.idPaciente)
-                ).ToListAsync();
+            if (citaInput.idPacientes != null)
+            {
+                pacientes = await _context.paciente.Where(
+                        p => citaInput.idPacientes.Contains((int)p.idPaciente)
+                    ).ToListAsync();
 
-            List<promocion> promociones = await _context.promocion.Where(
+            }
+
+            if (citaInput.idPromociones != null)
+            {
+                promociones = await _context.promocion.Where(
                     p => citaInput.idPromociones.Contains((int)p.idPromocion)
                 ).ToListAsync();
+            }
 
-            List<terapeuta> terapeutas = await _context.terapeuta.Where(
+            if (citaInput.idTerapeutas != null)
+            {
+                terapeutas = await _context.terapeuta.Where(
                     p => citaInput.idTerapeutas.Contains((int)p.idTerapeuta)
                 ).ToListAsync();
+            }
 
-            List<terapia> terapias = await _context.terapia.Where(
+            if (citaInput.idTerapias != null)
+            {
+                terapias = await _context.terapia.Where(
                     p => citaInput.idTerapias.Contains((int)p.idTerapia)
                 ).ToListAsync();
+            }
 
             cita cita = new cita()
             {
@@ -40,6 +57,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
                 idPromocion = promociones,
                 idTerapeuta = terapeutas,
                 idTerapia = terapias,
+                detalleHC = citaInput.historialClinico
             };
 
             _context.cita.Add(cita);
@@ -100,6 +118,12 @@ namespace api_nancurunaisa.Resolvers.Mutations
                 citaInput.idCita
             );
 
+            await _context.Database.ExecuteSqlRawAsync(
+                "DELETE detalleHC WHERE idCita = {0} AND idPaciente IN ({1})",
+                citaInput.idCita, string.Join(", ", citaInput.idPacientes)
+            );
+
+
             List<paciente> pacientes = await _context.paciente.Where(
                     p => citaInput.idPacientes.Contains((int)p.idPaciente)
                 ).ToListAsync();
@@ -129,6 +153,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
                 idPromocion = promociones,
                 idTerapeuta = terapeutas,
                 idTerapia = terapias,
+                detalleHC = citaInput.historialClinico
             };
 
             _context.cita.Update(cita);

@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using api_nancurunaisa.Data;
 using api_nancurunaisa.Resolvers.Queries;
 using api_nancurunaisa.Resolvers.Mutations;
+using HotChocolate.Types.Pagination;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -22,7 +23,9 @@ builder.Services.AddCors(options =>
                           .WithOrigins(
                               "http://localhost:3000", 
                               "http://172.23.82.105:3000",
-                              "http://25.14.18.58:3000")
+                              "http://25.14.18.58:3000",
+                              "http://192.168.1.101:3000"
+                              )
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -57,6 +60,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddGraphQLServer()
+    .SetPagingOptions(new PagingOptions { DefaultPageSize = 200 })
     .AddQueryType(d => d.Name("Query"))
         .AddType<TerapeutaQueryResolver>()
         .AddType<PacienteQueryResolver>()

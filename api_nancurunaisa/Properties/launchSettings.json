@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "graphql",
-      //"applicationUrl": "http://172.23.173.158:5037",
+      //"applicationUrl": "http://192.168.1.117:5037",
       "applicationUrl": "http://localhost:5037",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

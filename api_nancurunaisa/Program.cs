@@ -8,6 +8,8 @@ using api_nancurunaisa.Data;
 using api_nancurunaisa.Resolvers.Queries;
 using api_nancurunaisa.Resolvers.Mutations;
 using HotChocolate.Types.Pagination;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -24,6 +26,8 @@ builder.Services.AddCors(options =>
                               "http://localhost:3000", 
                               "http://172.23.82.105:3000",
                               "http://25.14.18.58:3000",
+                              "http://192.168.1.117:3000",
+                              "http://192.168.1.100:3000",
                               "http://192.168.1.101:3000"
                               )
                           .AllowAnyHeader()
@@ -52,6 +56,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -105,11 +110,11 @@ builder.Services
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 

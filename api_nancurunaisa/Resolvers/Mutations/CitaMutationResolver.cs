@@ -1,4 +1,7 @@
 ﻿using api_nancurunaisa.Data;
+using api_nancurunaisa.Models;
+using MessagePack;
+using System.Globalization;
 
 namespace api_nancurunaisa.Resolvers.Mutations
 {
@@ -47,12 +50,12 @@ namespace api_nancurunaisa.Resolvers.Mutations
 
             cita cita = new cita()
             {
-                fechaHora = citaInput.fechaHora,
+                fechaHora = StringToDT(citaInput.fechaHora),
                 direccionDomicilio = citaInput.direccionDomicilio,
                 idHabitacion = citaInput.idHabitacion,
                 idEstado = (int)citaInput.idEstado,
-                horaInicio = citaInput.horaInicio,
-                horaFin = citaInput.horaFin,
+                horaInicio = citaInput.horaInicio is not null ? StringToDT(citaInput.horaInicio) : null,
+                horaFin = citaInput.horaFin is not null ? StringToDT(citaInput.horaFin) : null,
                 idPaciente = pacientes,
                 idPromocion = promociones,
                 idTerapeuta = terapeutas,
@@ -119,10 +122,9 @@ namespace api_nancurunaisa.Resolvers.Mutations
             );
 
             await _context.Database.ExecuteSqlRawAsync(
-                "DELETE detalleHC WHERE idCita = {0} AND idPaciente IN ({1})",
-                citaInput.idCita, string.Join(", ", citaInput.idPacientes)
+                "DELETE detalleHC WHERE idCita = {0}",
+                citaInput.idCita
             );
-
 
             List<paciente> pacientes = await _context.paciente.Where(
                     p => citaInput.idPacientes.Contains((int)p.idPaciente)
@@ -140,15 +142,18 @@ namespace api_nancurunaisa.Resolvers.Mutations
                     p => citaInput.idTerapias.Contains((int)p.idTerapia)
                 ).ToListAsync();
 
+            var vs = DateTime.Parse(citaInput.fechaHora);
+
+
             cita cita = new cita()
             {
                 idCita = citaInput.idCita,
-                fechaHora = citaInput.fechaHora,
+                fechaHora = StringToDT(citaInput.fechaHora),
                 direccionDomicilio = citaInput.direccionDomicilio,
                 idHabitacion = citaInput.idHabitacion,
                 idEstado = (int)citaInput.idEstado,
-                horaInicio = citaInput.horaInicio,
-                horaFin = citaInput.horaFin,
+                horaInicio = citaInput.horaInicio is not null? StringToDT(citaInput.horaInicio): null,
+                horaFin = citaInput.horaFin is not null ? StringToDT(citaInput.horaFin) : null,
                 idPaciente = pacientes,
                 idPromocion = promociones,
                 idTerapeuta = terapeutas,
@@ -160,6 +165,12 @@ namespace api_nancurunaisa.Resolvers.Mutations
             await _context.SaveChangesAsync();
             return cita;
 
+        }
+
+        public DateTime StringToDT(String date)
+        {
+            DateTime fechaHora = DateTime.Parse(date);
+            return fechaHora;
         }
     }
 }

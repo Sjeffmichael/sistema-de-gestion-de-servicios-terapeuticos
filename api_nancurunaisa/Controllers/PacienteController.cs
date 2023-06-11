@@ -34,14 +34,14 @@ namespace api_nancurunaisa.Controllers
             var pageResult = (float)PerPage;
             var pageCount = Math.Ceiling(_context.paciente.Where(t => t.nombres.Contains(nombrePaciente)).Count() / (float)PerPage);
 
-            var pacientesResults = await _context.paciente.Where(t => t.nombres.Contains(nombrePaciente)).Include(x => x.amnanesis)
-                  .Skip((Page - 1) * PerPage)
-                  .Take((int)pageResult)
-                  .ToListAsync();
+            //var pacientesResults = await _context.paciente.Where(t => t.nombres.Contains(nombrePaciente)).Include(x => x.amnanesis)
+                  //.Skip((Page - 1) * PerPage)
+                  //.Take((int)pageResult)
+                  //.ToListAsync();
 
             var response = new PacientePaginationResponse
             {
-                pacientes = pacientesResults,
+                //pacientes = pacientesResults,
                 currentPage = Page,
                 pages = (int)pageCount
             };

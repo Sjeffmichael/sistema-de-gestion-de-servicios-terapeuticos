@@ -1,4 +1,6 @@
-﻿namespace api_nancurunaisa.Resolvers.Queries
+﻿using api_nancurunaisa.Data;
+
+namespace api_nancurunaisa.Resolvers.Queries
 {
     [ExtendObjectType("Query")]
     public class PacienteQueryResolver
@@ -9,7 +11,7 @@
         [UseFiltering]
         [UseSorting]
         public IQueryable<paciente> GetPaciente(
-            [Service] nancurunaisadbContext context
+            [Service] nancuranaisaDbContext context
         )
         {
             return context.paciente.AsQueryable();

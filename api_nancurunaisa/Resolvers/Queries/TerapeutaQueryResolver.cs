@@ -1,5 +1,4 @@
-using HotChocolate.Types;
-using HotChocolate.Types.Pagination;
+using api_nancurunaisa.Data;
 
 namespace api_nancurunaisa.Resolvers.Queries
 {
@@ -11,11 +10,18 @@ namespace api_nancurunaisa.Resolvers.Queries
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<masajista> GetMasajistas(
-            [Service] nancurunaisadbContext context
+        public IQueryable<terapeuta> GetTerapeutas(
+            [Service] nancuranaisaDbContext context,
+            string nombreUsuario = ""
         ) 
         {
-            return context.masajista.AsQueryable();
+            return context.terapeuta
+                          .Where(
+                            t => (
+                                t.idUsuarioNavigation.nombres + ' ' + t.idUsuarioNavigation.apellidos
+                            ).Contains(nombreUsuario)
+                          )
+                          .AsQueryable();
         } 
     }
 }

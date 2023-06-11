@@ -25,10 +25,10 @@ namespace api_nancurunaisa.Controllers
             if (dateTime_date.Day <= day_15.Day)
             {
                 citas = await _context.cita
-                   .Include(m => m.idMasajista.Where(m => m.idMasajista == id))
+                   //.Include(m => m.idMasajista.Where(m => m.idMasajista == id))
                    .Where(
                        c => c.fechaHora.Month == dateTime_date.Month &&
-                       c.idMasajista.Any(m => m.idMasajista == id) &&
+                       //c.idMasajista.Any(m => m.idMasajista == id) &&
                        c.fechaHora.Year == dateTime_date.Year &&
                        c.fechaHora.Day >= first_day_month.Day &&
                        c.fechaHora.Day <= day_15.Day
@@ -38,10 +38,10 @@ namespace api_nancurunaisa.Controllers
             else
             {
                 citas = await _context.cita
-                    .Include(m => m.idMasajista.Where(m => m.idMasajista == id))
+                    //.Include(m => m.idMasajista.Where(m => m.idMasajista == id))
                     .Where(
                         c => c.fechaHora.Month == dateTime_date.Month &&
-                        c.idMasajista.Any(m => m.idMasajista == id) &&
+                        //c.idMasajista.Any(m => m.idMasajista == id) &&
                         c.fechaHora.Year == dateTime_date.Year &&
                         c.fechaHora.Day <= last_day_month.Day &&
                         c.fechaHora.Day > day_15.Day

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace api_nancurunaisa.Models
@@ -8,24 +7,26 @@ namespace api_nancurunaisa.Models
     {
         public paciente()
         {
-            amnanesis = new HashSet<amnanesis>();
-            pacienteCita = new HashSet<pacienteCita>();
+            detalleHC = new HashSet<detalleHC>();
+            idCita = new HashSet<cita>();
         }
 
-        public int idPaciente { get; set; }
+        public int? idPaciente { get; set; }
         public string nombres { get; set; } = null!;
         public string apellidos { get; set; } = null!;
         public string sexo { get; set; } = null!;
-        public int edad { get; set; }
         public string nacionalidad { get; set; } = null!;
-        public string? profesion_oficio { get; set; }
-        public double? horas_trabajo { get; set; }
+        public string? profesionOficio { get; set; }
+        public double? horasTrabajo { get; set; }
         public string numCel { get; set; } = null!;
-        public DateTime fecha_nacimiento { get; set; }
+        public DateTime fechaNacimiento { get; set; }
+        public string? escolaridad { get; set; }
+        public string? estadoCivil { get; set; }
+        public string? direccion { get; set; }
+        public bool? activo { get; set; }
 
-        public virtual ICollection<amnanesis> amnanesis { get; set; }
+        public virtual ICollection<detalleHC>? detalleHC { get; set; }
 
-        [JsonIgnore]
-        public virtual ICollection<pacienteCita> pacienteCita { get; set; }
+        public virtual ICollection<cita>? idCita { get; set; }
     }
 }

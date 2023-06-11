@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api_nancurunaisa.Models
 {
@@ -9,32 +7,30 @@ namespace api_nancurunaisa.Models
     {
         public cita()
         {
+            detalleHC = new HashSet<detalleHC>();
             factura = new HashSet<factura>();
-            pacienteCita = new HashSet<pacienteCita>();
-            idMasajista = new HashSet<masajista>();
+            idPaciente = new HashSet<paciente>();
             idPromocion = new HashSet<promocion>();
+            idTerapeuta = new HashSet<terapeuta>();
             idTerapia = new HashSet<terapia>();
         }
 
-        public int idCita { get; set; }
-        public int? idHabitacion { get; set; }
+        public int? idCita { get; set; }
         public DateTime fechaHora { get; set; }
-        public bool? pendiente { get; set; }
-        public string? direccion_domicilio { get; set; }
-        public string? color { get; set; }
+        public string? direccionDomicilio { get; set; }
+        public int? idHabitacion { get; set; }
+        public int idEstado { get; set; } = 3;
+        public DateTime? horaInicio { get; set; }
+        public DateTime? horaFin { get; set; }
 
-        //[NotMapped]
-        //public string nombreSucursal { get; set; }
+        public virtual estadoCita? idEstadoNavigation { get; set; } = null!;
+        public virtual habitacion? idHabitacionNavigation { get; set; } = null!;
+        public virtual ICollection<detalleHC>? detalleHC { get; set; }
+        public virtual ICollection<factura>? factura { get; set; }
 
-        //[NotMapped]
-        //public string nombreHabitacion { get; set; }
-        //[JsonIgnore]
-        public virtual habitacion? idHabitacionNavigation { get; set; }
-        public virtual ICollection<factura> factura { get; set; }
-        public virtual ICollection<pacienteCita> pacienteCita { get; set; }
-
-        public virtual ICollection<masajista> idMasajista { get; set; }
-        public virtual ICollection<promocion> idPromocion { get; set; }
-        public virtual ICollection<terapia> idTerapia { get; set; }
+        public virtual ICollection<paciente>? idPaciente { get; set; }
+        public virtual ICollection<promocion>? idPromocion { get; set; }
+        public virtual ICollection<terapeuta>? idTerapeuta { get; set; }
+        public virtual ICollection<terapia>? idTerapia { get; set; }
     }
 }

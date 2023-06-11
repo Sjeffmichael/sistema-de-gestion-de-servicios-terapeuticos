@@ -61,12 +61,12 @@ namespace api_nancurunaisa.Controllers
               return NotFound();
           }
             var cita = await _context.cita.Where(b => b.idCita == id)
-                .Include(m => m.idMasajista)
+                //.Include(m => m.idMasajista)
                 .Include(p => p.idPromocion)
                 .Include(f => f.factura)
                 .Include(t => t.idTerapia)
-                .Include(s => s.pacienteCita)
-                .ThenInclude(u => u.idPacienteNavigation)
+                //.Include(s => s.pacienteCita)
+                //.ThenInclude(u => u.idPacienteNavigation)
                 .Include(c => c.idHabitacionNavigation)
                 .ThenInclude(d => d.idSucursalNavigation)
                 .ToListAsync();
@@ -173,11 +173,11 @@ namespace api_nancurunaisa.Controllers
 
             var newCita = new cita
             {
-                idHabitacion = cita.idHabitacion,
-                fechaHora = cita.fechaHora,
-                direccion_domicilio = cita.direccion_domicilio,
-                color = cita.color,
-                idMasajista = masajistas,
+                //idHabitacion = cita.idHabitacion,
+                //fechaHora = cita.fechaHora,
+                //direccion_domicilio = cita.direccion_domicilio,
+                //color = cita.color,
+                //idMasajista = masajistas,
                 idPromocion = promociones,
                 idTerapia = terapias
             };

@@ -1,6 +1,9 @@
+using api_nancurunaisa.Data;
+using api_nancurunaisa.Models;
 using api_nancurunaisa.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +19,7 @@ namespace api_nancurunaisa.Resolvers.Mutations
         [GraphQLDescription("Autenticación de usuarios")]
         public async Task<Token> Authentication(
             [Service] IConfiguration _configuration,
-            [Service] nancurunaisadbContext _context,
+            [Service] nancuranaisaDbContext _context,
             string? email,
             string? password
         )
@@ -31,14 +34,25 @@ namespace api_nancurunaisa.Resolvers.Mutations
 
                 if (user != null)
                 {
+                    // get user permissions
+                    //var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p => 
+                    //    p.idRol.Select(r => r.idOperacion.Select(o => new { 
+                    //        operacion = o.nombre, modulo = o.idModuloNavigation.nombre 
+                    //    }))
+                    //).First();
+                    // get user permissions
+                    var permisos = _context.usuario.Where(u => u.idUsuario == user.idUsuario).Select(p =>
+                        p.idRol.Select(r => new { r.idRol, r.nombreRol })).First();
+
                     //create claims details based on the user information
                     var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim("UserId", user.idMasajista.ToString()),
-                        new Claim("Email", user.correo),
-                        new Claim("Roll", user.roll),
+                        new Claim("UserId", user.idUsuario.ToString()),
+                        new Claim("Email", user.email),
+                        new Claim("permisos", JsonConvert.SerializeObject(permisos, Formatting.Indented)),
+
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -57,30 +71,27 @@ namespace api_nancurunaisa.Resolvers.Mutations
                     };
 
                     return generatedToken;
-                    //return Ok(authToken);
                 }
                 else
                 {
-                    //return BadRequest("Invalid credentials");
                     throw new GraphQLException(new Error("Credenciales invalidas"));
                 }
             }
             else
             {
-                //return BadRequest();
                 throw new GraphQLException(new Error("Contraseña o email requeridas"));
             }
         }
 
-        private async Task<masajista?> GetUser(
-            [Service] nancurunaisadbContext _context, 
+        private async Task<usuario?> GetUser(
+            [Service] nancuranaisaDbContext _context, 
             string email, 
             string password
         )
         {
-            _context.ChangeTracker.AutoDetectChangesEnabled = false; 
-            return await _context.masajista.FirstOrDefaultAsync(
-                u => u.activo == true && u.correo == email && u.password == password
+            //_context.ChangeTracker.AutoDetectChangesEnabled = false; 
+            return await _context.usuario.FirstOrDefaultAsync(
+                u => u.activo == true && u.email == email && u.password == password
             );
         }
     }

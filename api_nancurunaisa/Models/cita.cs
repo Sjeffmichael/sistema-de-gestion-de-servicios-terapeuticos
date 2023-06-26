@@ -5,6 +5,8 @@ namespace api_nancurunaisa.Models
 {
     public partial class cita
     {
+        internal object Total;
+
         public cita()
         {
             detalleHC = new HashSet<detalleHC>();
